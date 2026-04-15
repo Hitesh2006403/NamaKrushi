@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select District - Namakrishii</title>
+    <link rel="stylesheet" href="static/district.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="lang-switcher">
+        <button class="lang-btn" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn" onclick="setLanguage('kn')">ಕನ್ನಡ</button>
+    </div>
+
+    <div class="container">
+
+        <div class="form-wrapper glass select-glass">
+            <div class="form-header">
+                <h2 data-i18n="district:title">Welcome</h2>
+                <p data-i18n="district:subtitle">Please select your district to proceed</p>
+            </div>
+
+            
+            <form action="crops.html" method="GET" class="registration-form">
+                <div class="input-group">
+                    <div class="input-field select-field">
+                        <label for="district" data-i18n="district:district">District</label>
+                        <select id="district" name="district" required>
+                            <option value="" disabled selected data-i18n="district:placeholder">Select from all 31 districts</option>
+
+                            <option value="bagalkot" data-i18n="district:bagalkot">Bagalkot</option>
+                            <option value="ballari" data-i18n="district:ballari">Ballari (Bellary)</option>
+                            <option value="belagavi" data-i18n="district:belagavi">Belagavi (Belgaum)</option>
+                            <option value="bengaluru-rural" data-i18n="district:bengaluru-rural">Bengaluru Rural</option>
+                            <option value="bengaluru-urban" data-i18n="district:bengaluru-urban">Bengaluru Urban</option>
+                            <option value="bidar" data-i18n="district:bidar">Bidar</option>
+                            <option value="chamarajanagar" data-i18n="district:chamarajanagar">Chamarajanagar</option>
+                            <option value="chikkaballapur" data-i18n="district:chikkaballapur">Chikkaballapur</option>
+                            <option value="chikkamagaluru" data-i18n="district:chikkamagaluru">Chikkamagaluru</option>
+                            <option value="chitradurga" data-i18n="district:chitradurga">Chitradurga</option>
+                            <option value="dakshina-kannada" data-i18n="district:dakshina-kannada">Dakshina Kannada</option>
+                            <option value="davanagere" data-i18n="district:davanagere">Davanagere</option>
+                            <option value="dharwad" data-i18n="district:dharwad">Dharwad</option>
+                            <option value="gadag" data-i18n="district:gadag">Gadag</option>
+                            <option value="hassan" data-i18n="district:hassan">Hassan</option>
+                            <option value="haveri" data-i18n="district:haveri">Haveri</option>
+                            <option value="kalaburagi" data-i18n="district:kalaburagi">Kalaburagi (Gulbarga)</option>
+                            <option value="kodagu" data-i18n="district:kodagu">Kodagu</option>
+                            <option value="kolar" data-i18n="district:kolar">Kolar</option>
+                            <option value="koppal" data-i18n="district:koppal">Koppal</option>
+                            <option value="mandya" data-i18n="district:mandya">Mandya</option>
+                            <option value="mysuru" data-i18n="district:mysuru">Mysuru (Mysore)</option>
+                            <option value="raichur" data-i18n="district:raichur">Raichur</option>
+                            <option value="ramanagara" data-i18n="district:ramanagara">Ramanagara</option>
+                            <option value="shivamogga" data-i18n="district:shivamogga">Shivamogga (Shimoga)</option>
+                            <option value="tumakuru" data-i18n="district:tumakuru">Tumakuru (Tumkur)</option>
+                            <option value="udupi" data-i18n="district:udupi">Udupi</option>
+                            <option value="uttara-kannada" data-i18n="district:uttara-kannada">Uttara Kannada</option>
+                            <option value="vijayanagara" data-i18n="district:vijayanagara">Vijayanagara</option>
+                            <option value="vijayapura" data-i18n="district:vijayapura">Vijayapura (Bijapur)</option>
+                            <option value="yadgir" data-i18n="district:yadgir">Yadgir</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" style="margin-top: 1.5rem;" data-i18n="district:continue">Continue</button>
+
+            </form>
+        </div>
+    </div>
+    <script src="static/translations.js"></script>
+    <script src="static/main.js"></script>
+</body>
+
+</html>

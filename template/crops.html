@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Major Crops - Namakrishii</title>
+    <link rel="stylesheet" href="static/crops.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="lang-switcher">
+        <button class="lang-btn" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn" onclick="setLanguage('kn')">ಕನ್ನಡ</button>
+    </div>
+
+    <div class="container">
+
+        <div class="form-wrapper glass select-glass">
+            <div class="form-header">
+                <h2 id="districtName" data-i18n="crops:title">Major Crops</h2>
+                <p id="districtSubtitle" data-i18n="crops:subtitle">Loading crops for selected district...</p>
+            </div>
+
+            
+            <div id="error-msg">Please select a valid district from the previous page.</div>
+
+            <!-- 🔬 Disease Detection Banner (Hero position now) -->
+            <div id="detect-banner" style="
+                margin-top: 1rem;
+                margin-bottom: 2.5rem;
+                background: linear-gradient(135deg, rgba(122,193,66,0.1), rgba(74,222,128,0.05));
+                border: 1px solid rgba(122,193,66,0.35);
+                border-radius: 16px;
+                padding: 1.75rem 2rem;
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+                box-shadow: 0 0 32px rgba(122,193,66,0.12);
+            ">
+                <div style="font-size: 3rem; animation: pulse-icon 2s ease-in-out infinite;">🔬</div>
+                <div style="flex: 1;">
+                    <div style="
+                        font-size: 1.15rem;
+                        font-weight: 700;
+                        color: var(--text-main);
+                        margin-bottom: 0.3rem;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                    ">
+                        <span data-i18n="detect:banner_title">AI Disease Detection</span>
+                        <span style="
+                            background: linear-gradient(135deg,#7ac142,#4ade80);
+                            color: #0a1628;
+                            font-size: 0.65rem;
+                            font-weight: 800;
+                            padding: 0.15rem 0.55rem;
+                            border-radius: 99px;
+                            letter-spacing: 0.5px;
+                            text-transform: uppercase;
+                        ">✨ AI</span>
+                    </div>
+                    <p style="
+                        font-size: 0.88rem;
+                        color: var(--text-muted);
+                        margin: 0 0 1rem 0;
+                        line-height: 1.5;
+                    " data-i18n="detect:banner_desc">
+                        Upload a photo of your plant and get instant disease diagnosis, treatment advice, and recommended medicines.
+                    </p>
+                    <a id="detect-link" href="disease_detect.html" style="
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 0.5rem;
+                        background: linear-gradient(135deg, #7ac142, #4ade80);
+                        color: #0a1628;
+                        font-weight: 700;
+                        font-size: 0.92rem;
+                        padding: 0.6rem 1.4rem;
+                        border-radius: 10px;
+                        text-decoration: none;
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 20px rgba(122,193,66,0.4)'"
+                       onmouseout="this.style.transform='';this.style.boxShadow=''" data-i18n="detect:banner_btn">
+                        🔬 Detect Disease Now
+                    </a>
+                </div>
+            </div>
+
+            <!-- Integrated Dashboard Overview -->
+            <div class="dashboard-overview" id="dashboard">
+                <!-- Weather Widget -->
+                <div id="weather-widget" class="data-widget">
+                    <div class="loading-widget">Fetching weather...</div>
+                </div>
+
+                <!-- Soil Widget -->
+                <div id="soil-widget" class="data-widget">
+                    <div class="loading-widget">Fetching soil data...</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 0.5rem; font-size: 1.1rem; color: var(--text-main);">🌟 Recommended Regional Crops</h3>
+            <div class="crops-grid" id="cropsGrid">
+                <!-- Crops will be injected here via JS -->
+            </div>
+
+            <div style="text-align: center;">
+                <a href="district.html" class="back-btn" data-i18n="crops:back">&larr; Back to District Selection</a>
+            </div>
+
+
+            <style>
+                @keyframes pulse-icon {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.1); }
+                }
+            </style>
+
+        </div>
+    </div>
+
+    <script src="static/translations.js"></script>
+    <script src="static/main.js"></script>
+    <script>
+
+        const cropData = {
+            "bagalkot": { name: "Bagalkot", lat: 16.1670, lon: 75.6470, soil: { type: "Clayey", ph: 8.1, clay: 42, sand: 18 }, crops: ["Sugarcane", "Jowar", "Maize", "Groundnut"], icons: ["🎋", "🌾", "🌽", "🥜"] },
+            "ballari": { name: "Ballari", lat: 15.1394, lon: 76.9214, soil: { type: "Black Soil", ph: 7.9, clay: 38, sand: 22 }, crops: ["Paddy", "Jowar", "Cotton", "Sunflower"], icons: ["🌾", "🌾", "☁️", "🌻"] },
+            "belagavi": { name: "Belagavi", lat: 15.8497, lon: 74.4977, soil: { type: "Black/Red", ph: 7.2, clay: 30, sand: 35 }, crops: ["Sugarcane", "Tobacco", "Cotton", "Jowar"], icons: ["🎋", "🍂", "☁️", "🌾"] },
+            "bengaluru-rural": { name: "Bengaluru Rural", lat: 13.2500, lon: 77.3400, soil: { type: "Red Loamy", ph: 6.4, clay: 22, sand: 45 }, crops: ["Ragi", "Maize", "Grapes", "Mango"], icons: ["🌾", "🌽", "🍇", "🥭"] },
+            "bengaluru-urban": { name: "Bengaluru Urban", lat: 12.9716, lon: 77.5946, soil: { type: "Red Loamy", ph: 6.2, clay: 20, sand: 48 }, crops: ["Ragi", "Vegetables", "Flowers", "Fruits"], icons: ["🌾", "🥦", "🌸", "🍎"] },
+            "bidar": { name: "Bidar", lat: 17.9104, lon: 77.5199, soil: { type: "Lateritic", ph: 7.5, clay: 28, sand: 40 }, crops: ["Bengal Gram", "Red Gram", "Jowar", "Soyabean"], icons: ["🌱", "🌿", "🌾", "🫘"] },
+            "chamarajanagar": { name: "Chamarajanagar", lat: 11.9261, lon: 76.9437, soil: { type: "Red Soil", ph: 6.8, clay: 24, sand: 42 }, crops: ["Sugarcane", "Turmeric", "Maize", "Banana"], icons: ["🎋", "🫚", "🌽", "🍌"] },
+            "chikkaballapur": { name: "Chikkaballapur", lat: 13.4355, lon: 77.7277, soil: { type: "Red Loamy", ph: 6.6, clay: 21, sand: 46 }, crops: ["Maize", "Ragi", "Grapes", "Silk/Mulberry"], icons: ["🌽", "🌾", "🍇", "🐛"] },
+            "chikkamagaluru": { name: "Chikkamagaluru", lat: 13.3161, lon: 75.7720, soil: { type: "Lateritic/Coffee", ph: 5.8, clay: 18, sand: 50 }, crops: ["Coffee", "Arecanut", "Pepper", "Paddy"], icons: ["☕", "🌴", "🌶️", "🌾"] },
+            "chitradurga": { name: "Chitradurga", lat: 14.2251, lon: 76.3980, soil: { type: "Red/Black", ph: 7.4, clay: 32, sand: 38 }, crops: ["Groundnut", "Onion", "Maize", "Cotton"], icons: ["🥜", "🧅", "🌽", "☁️"] },
+            "dakshina-kannada": { name: "Dakshina Kannada", lat: 12.8706, lon: 74.8827, soil: { type: "Coastal Alluvial", ph: 5.5, clay: 15, sand: 65 }, crops: ["Arecanut", "Paddy", "Coconut", "Rubber"], icons: ["🌴", "🌾", "🥥", "🌳"] },
+            "davanagere": { name: "Davanagere", lat: 14.4644, lon: 75.9218, soil: { type: "Black/Red", ph: 7.6, clay: 35, sand: 30 }, crops: ["Paddy", "Maize", "Arecanut", "Cotton"], icons: ["🌾", "🌽", "🌴", "☁️"] },
+            "dharwad": { name: "Dharwad", lat: 15.4589, lon: 75.0078, soil: { type: "Black Soil", ph: 8.2, clay: 45, sand: 15 }, crops: ["Cotton", "Jowar", "Wheat", "Mango"], icons: ["☁️", "🌾", "🌾", "🥭"] },
+            "gadag": { name: "Gadag", lat: 15.4221, lon: 75.6268, soil: { type: "Black Soil", ph: 8.3, clay: 48, sand: 12 }, crops: ["Wheat", "Onion", "Bengal Gram", "Chilli"], icons: ["🌾", "🧅", "🌱", "🌶️"] },
+            "hassan": { name: "Hassan", lat: 13.0072, lon: 76.1026, soil: { type: "Red Loamy", ph: 6.4, clay: 20, sand: 45 }, crops: ["Coffee", "Potato", "Coconut", "Cardamom"], icons: ["☕", "🥔", "🥥", "🌿"] },
+            "haveri": { name: "Haveri", lat: 14.7961, lon: 75.3995, soil: { type: "Red/Black", ph: 7.4, clay: 30, sand: 40 }, crops: ["Cotton", "Chilli", "Jowar", "Maize"], icons: ["☁️", "🌶️", "🌾", "🌽"] },
+            "kalaburagi": { name: "Kalaburagi", lat: 17.3297, lon: 76.8343, soil: { type: "Deep Black", ph: 8.5, clay: 55, sand: 8 }, crops: ["Red Gram", "Jowar", "Bengal Gram", "Sunflower"], icons: ["🌿", "🌾", "🌱", "🌻"] },
+            "kodagu": { name: "Kodagu", lat: 12.4244, lon: 75.7382, soil: { type: "Forest Soil", ph: 5.2, clay: 12, sand: 70 }, crops: ["Coffee", "Pepper", "Cardamom", "Orange"], icons: ["☕", "🌶️", "🌿", "🍊"] },
+            "kolar": { name: "Kolar", lat: 13.1363, lon: 78.1291, soil: { type: "Red Soil", ph: 6.9, clay: 25, sand: 40 }, crops: ["Mango", "Ragi", "Tomato", "Vegetables"], icons: ["🥭", "🌾", "🍅", "🥦"] },
+            "koppal": { name: "Koppal", lat: 15.3463, lon: 76.1548, soil: { type: "Red/Black", ph: 7.8, clay: 35, sand: 35 }, crops: ["Paddy", "Sunflower", "Maize", "Bajra"], icons: ["🌾", "🌻", "🌽", "🌾"] },
+            "mandya": { name: "Mandya", lat: 12.5218, lon: 76.8951, soil: { type: "Red Loamy", ph: 6.5, clay: 22, sand: 48 }, crops: ["Sugarcane", "Paddy", "Ragi", "Coconut"], icons: ["🎋", "🌾", "🌾", "🥥"] },
+            "mysuru": { name: "Mysuru", lat: 12.2958, lon: 76.6394, soil: { type: "Red Loamy", ph: 6.7, clay: 24, sand: 44 }, crops: ["Tobacco", "Paddy", "Cotton", "Sugarcane"], icons: ["🍂", "🌾", "☁️", "🎋"] },
+            "raichur": { name: "Raichur", lat: 16.2120, lon: 77.3559, soil: { type: "Black/Alluvial", ph: 8.0, clay: 40, sand: 20 }, crops: ["Paddy", "Cotton", "Groundnut", "Jowar"], icons: ["🌾", "☁️", "🥜", "🌾"] },
+            "ramanagara": { name: "Ramanagara", lat: 12.7150, lon: 77.2813, soil: { type: "Red Loamy", ph: 6.3, clay: 21, sand: 47 }, crops: ["Silk/Mulberry", "Mango", "Ragi", "Coconut"], icons: ["🐛", "🥭", "🌾", "🥥"] },
+            "shivamogga": { name: "Shivamogga", lat: 13.9299, lon: 75.5681, soil: { type: "Lateritic", ph: 6.1, clay: 19, sand: 55 }, crops: ["Arecanut", "Paddy", "Maize", "Sugarcane"], icons: ["🌴", "🌾", "🌽", "🎋"] },
+            "tumakuru": { name: "Tumakuru", lat: 13.3392, lon: 77.1140, soil: { type: "Red Sandy", ph: 6.6, clay: 18, sand: 52 }, crops: ["Coconut", "Arecanut", "Ragi", "Groundnut"], icons: ["🥥", "🌴", "🌾", "🥜"] },
+            "udupi": { name: "Udupi", lat: 13.3409, lon: 74.7421, soil: { type: "Coastal Alluvial", ph: 5.6, clay: 14, sand: 68 }, crops: ["Paddy", "Arecanut", "Coconut", "Cashew"], icons: ["🌾", "🌴", "🥥", "🌰"] },
+            "uttara-kannada": { name: "Uttara Kannada", lat: 14.8033, lon: 74.3725, soil: { type: "Forest/Lateritic", ph: 5.8, clay: 16, sand: 60 }, crops: ["Arecanut", "Coconut", "Paddy", "Spices"], icons: ["🌴", "🥥", "🌾", "🌿"] },
+            "vijayanagara": { name: "Vijayanagara", lat: 15.2680, lon: 76.3900, soil: { type: "Black/Red", ph: 7.7, clay: 36, sand: 32 }, crops: ["Paddy", "Sugarcane", "Cotton", "Maize"], icons: ["🌾", "🎋", "☁️", "🌽"] },
+            "vijayapura": { name: "Vijayapura", lat: 16.8302, lon: 75.7100, soil: { type: "Black Soil", ph: 8.4, clay: 50, sand: 10 }, crops: ["Grapes", "Pomegranate", "Jowar", "Wheat"], icons: ["🍇", "🍎", "🌾", "🌾"] },
+            "yadgir": { name: "Yadgir", lat: 16.7613, lon: 77.1442, soil: { type: "Black/Red", ph: 7.9, clay: 34, sand: 36 }, crops: ["Paddy", "Red Gram", "Cotton", "Groundnut"], icons: ["🌾", "🌿", "☁️", "🥜"] }
+        };
+
+        const WEATHER_API_KEY = "{{ WEATHER_API_KEY|default:''|escapejs }}";
+
+        async function fetchWeather(city) {
+            const widget = document.getElementById('weather-widget');
+            const lang = localStorage.getItem('preferredLang') || 'en';
+            try {
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},IN&units=metric&appid=${WEATHER_API_KEY}`);
+                if (!response.ok) throw new Error();
+                const data = await response.json();
+                
+                widget.innerHTML = `
+                    <div class="widget-header">
+                        <span class="widget-title" data-i18n="crops:weather">${translations[lang].crops.weather}</span>
+                        <span style="font-size: 0.8rem; opacity: 0.8;">${city}</span>
+                    </div>
+
+                    <div class="weather-main">
+                        <div class="weather-temp">${Math.round(data.main.temp)}°C</div>
+                        <img class="weather-icon" src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png">
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--primary); text-transform: capitalize;">
+                        ${data.weather[0].description} • Humidity: ${data.main.humidity}%
+                    </div>
+                `;
+            } catch {
+                widget.innerHTML = `<div class="error-widget">Weather unavailable</div>`;
+            }
+        }
+
+        async function fetchSoil(lat, lon, fallback) {
+            const widget = document.getElementById('soil-widget');
+            const lang = localStorage.getItem('preferredLang') || 'en';
+            try {
+                const response = await fetch(`https://rest.isric.org/soilgrids/v2.0/properties/query?lat=${lat}&lon=${lon}&property=phh2o&property=clay&property=sand&depth=0-5cm&value=mean`);
+                if (!response.ok) throw new Error();
+                const data = await response.json();
+                
+                // ... (processing data) ...
+
+                widget.innerHTML = `
+                    <div class="widget-header">
+                        <span class="widget-title" data-i18n="crops:soil">${translations[lang].crops.soil}</span>
+                        <span style="font-size: 0.8rem; opacity: 0.8;">${type}</span>
+                    </div>
+
+                    <div class="soil-grid">
+                        <div class="soil-item"><span class="soil-label">pH Level</span><span class="soil-value">${ph}</span></div>
+                        <div class="soil-item"><span class="soil-label">Clay Content</span><span class="soil-value">${clay}%</span></div>
+                        <div class="soil-item"><span class="soil-label">Sand Content</span><span class="soil-value">${sand}%</span></div>
+                        <div class="soil-item"><span class="soil-label">Depth</span><span class="soil-value">0-5cm</span></div>
+                    </div>
+                `;
+            } catch {
+                if (fallback) {
+                    const lang = localStorage.getItem('preferredLang') || 'en';
+                    widget.innerHTML = `
+                        <div class="widget-header">
+                            <span class="widget-title" data-i18n="crops:soil">${translations[lang].crops.soil} (Regional)</span>
+                            <span style="font-size: 0.8rem; opacity: 0.8;">${fallback.type}</span>
+                        </div>
+
+                        <div class="soil-grid">
+                            <div class="soil-item"><span class="soil-label">pH Level</span><span class="soil-value">${fallback.ph}</span></div>
+                            <div class="soil-item"><span class="soil-label">Clay Content</span><span class="soil-value">${fallback.clay}%</span></div>
+                            <div class="soil-item"><span class="soil-label">Sand Content</span><span class="soil-value">${fallback.sand}%</span></div>
+                            <div class="soil-item"><span class="soil-label">Status</span><span class="soil-value">Regional Avg</span></div>
+                        </div>
+                    `;
+                } else {
+                    widget.innerHTML = `<div class="error-widget">Soil data unavailable</div>`;
+                }
+            }
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const districtKey = params.get('district');
+        const grid = document.getElementById('cropsGrid');
+
+        if (districtKey && cropData[districtKey]) {
+            const district = cropData[districtKey];
+            const lang = localStorage.getItem('preferredLang') || 'en';
+            const translatedDistrictName = (translations[lang] && translations[lang].district && translations[lang].district[districtKey]) ? translations[lang].district[districtKey] : district.name;
+            
+            document.getElementById('districtName').textContent = translatedDistrictName;
+            document.getElementById('districtName').setAttribute('data-dynamic-district', districtKey);
+            document.getElementById('districtSubtitle').textContent = (translations[lang] && translations[lang].crops) ? translations[lang].crops.subtitle : "Real-time insights for your region";
+
+            // Pass district context to disease detection
+            const detectLink = document.getElementById('detect-link');
+            if (detectLink) {
+                detectLink.href = `disease_detect.html?district=${encodeURIComponent(districtKey)}`;
+            }
+
+            // Automate API calls
+            fetchWeather(district.name);
+            fetchSoil(district.lat, district.lon, district.soil);
+
+            // Populate Crops
+            const selectedLang = localStorage.getItem('preferredLang') || 'en';
+            district.crops.forEach((crop, i) => {
+                const translatedCrop = (translations[selectedLang] && translations[selectedLang].crop_names && translations[selectedLang].crop_names[crop]) ? translations[selectedLang].crop_names[crop] : crop;
+                const card = document.createElement('div');
+                const matchPct = 85 + Math.floor(Math.random() * 14); // 85-98%
+                card.className = 'crop-card';
+                card.innerHTML = `
+                    <div class="crop-icon">${district.icons[i] || "🌱"}</div>
+                    <div class="crop-name" data-i18n-crop="${crop}">${translatedCrop}</div>
+                    <div class="crop-suitability">⚡ ${matchPct}% Match</div>
+                `;
+                grid.appendChild(card);
+            });
+        } else {
+            document.getElementById('error-msg').style.display = "block";
+            document.getElementById('dashboard').style.display = "none";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Namma Krishi</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f8e9;
+    text-align: center;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+h1 {
+    color: #2e7d32;
+}
+
+button {
+    padding: 10px;
+    margin: 10px;
+    background: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1b5e20;
+}
+
+#result-box {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    display: inline-block;
+    width: 300px;
+}
+
+.lang-switch button {
+    background: #1565c0;
+}
+
+.lang-switch button:hover {
+    background: #0d47a1;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+    <h1>🌾 Namma Krishi</h1>
+
+    <!-- Language Switch -->
+    <div class="lang-switch">
+        <button onclick="switchLanguage('en')">English</button>
+        <button onclick="switchLanguage('kn')">ಕನ್ನಡ</button>
+    </div>
+
+    <!-- Upload -->
+    <input type="file" id="imageInput">
+
+    <!-- Detect -->
+    <button onclick="detectDisease()">Detect Disease</button>
+
+    <!-- Result -->
+    <div id="result-box">
+        <h2 id="result-title">Detection Result</h2>
+        <p id="result-text">Your result will appear here</p>
+
+        <button onclick="speakResult()">🔊 Speak</button>
+        <button onclick="stopSpeech()">⛔ Stop</button>
+    </div>
+</div>
+
+<script src="static/translations.js"></script>
+<script src="static/main.js"></script>
+<script>
+// Language
+let currentLanguage = "en";
+
+// Results
+let resultEnglish = "";
+let resultKannada = "";
+
+// Switch Language
+function switchLanguage(lang) {
+    currentLanguage = lang;
+
+    if (lang === "kn") {
+        document.getElementById("result-title").innerText = "ಪತ್ತೆ ಫಲಿತಾಂಶ";
+        document.getElementById("result-text").innerText = resultKannada || "ಫಲಿತಾಂಶ ಇಲ್ಲ";
+    } else {
+        document.getElementById("result-title").innerText = "Detection Result";
+        document.getElementById("result-text").innerText = resultEnglish || "No result available";
+    }
+}
+
+// Simulated AI Detection
+function detectDisease() {
+    resultEnglish = "The plant is affected by leaf blight. Apply fungicide immediately.";
+    resultKannada = "ಸಸ್ಯಕ್ಕೆ ಲೀಫ್ ಬ್ಲೈಟ್ ರೋಗ ಬಂದಿದೆ. ತಕ್ಷಣ ಫಂಗಿಸೈಡ್ ಬಳಸಿರಿ.";
+
+    if (currentLanguage === "kn") {
+        document.getElementById("result-text").innerText = resultKannada;
+    } else {
+        document.getElementById("result-text").innerText = resultEnglish;
+    }
+
+    speakResult(); // Auto speak
+}
+
+// Speak
+function speakResult() {
+    let text = currentLanguage === "kn" ? resultKannada : resultEnglish;
+
+    if (!text) {
+        alert("No result to speak!");
+        return;
+    }
+
+    let speech = new SpeechSynthesisUtterance(text);
+
+    speech.lang = currentLanguage === "kn" ? "kn-IN" : "en-US";
+    speech.rate = 0.9;
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(speech);
+}
+
+// Stop
+function stopSpeech() {
+    window.speechSynthesis.cancel();
+}
+</script>
+
+</body>
+</html>

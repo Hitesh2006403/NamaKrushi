@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disease Details - Namakrishii</title>
+    <link rel="stylesheet" href="static/disease_details.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">        .header-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--input-border);
+        }
+        
+        .disease-image-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid var(--input-border);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            flex-shrink: 0;
+            background-color: var(--input-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .disease-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .title-area h2 {
+            font-size: 2rem;
+            margin-bottom: 0.25rem;
+            background: linear-gradient(135deg, #fff, #cbd5e1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .title-area .crop-badge {
+            display: inline-block;
+            background: rgba(122, 193, 66, 0.2);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid rgba(122, 193, 66, 0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        .info-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .info-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        .info-card p, .info-card ul {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        .info-card ul {
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .info-card li {
+            margin-bottom: 0.4rem;
+        }
+
+        /* Specific colors for icons */
+        .icon-symptoms { color: #f59e0b; }
+        .icon-causes { color: #ef4444; }
+        .icon-solutions { color: #10b981; }
+
+        .back-nav {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: var(--input-bg);
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--input-border);
+        }
+        .back-btn:hover {
+            color: var(--text-main);
+            background: rgba(15, 23, 42, 0.8);
+            border-color: var(--primary);
+        }
+
+        #error-msg {
+            color: #ef4444;
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        @media (max-width: 600px) {
+            .header-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            .disease-image-container {
+                width: 100px;
+                height: 100px;
+            }
+            .back-nav {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+        }
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(122, 193, 66, 0.1);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-switcher">
+        <button class="lang-btn" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn" onclick="setLanguage('kn')">ಕನ್ನಡ</button>
+    </div>
+
+    <!-- Automatically refresh to fetch AI translation if language is changed -->
+    <script>
+        window.addEventListener('languageChanged', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('crop')) {
+                window.location.reload();
+            }
+        });
+    </script>
+
+    <div class="container">
+
+        <div class="form-wrapper glass details-wrapper" id="content-area">
+            
+            <div id="error-msg">
+                <h2>Crop Not Found</h2>
+                <p>Please select a valid crop from the previous page.</p>
+                <a href="district.html" class="back-btn" style="margin-top: 1rem;">Back to Districts</a>
+            </div>
+
+            <div id="loading-overlay" style="display: none; text-align: center; padding: 2rem;">
+                <div class="loading-spinner"></div>
+                <p style="margin-top: 1rem; color: var(--text-muted);" data-i18n="disease:loading">AI is analyzing plant diseases...</p>
+            </div>
+
+
+            <div id="disease-details" style="display: none;">
+                <div class="header-section">
+                    <div class="disease-image-container">
+                        <img id="d-image" class="disease-image" src="" alt="Disease Image">
+                    </div>
+                    <div class="title-area">
+                        <div class="crop-badge" id="d-crop">Crop Name</div>
+                        <h2 id="d-name">Disease Name</h2>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><span class="icon-symptoms">🔍</span> <span data-i18n="disease:symptoms">Symptoms</span></h3>
+                        <ul id="d-symptoms">
+                            <!-- Injected -->
+                        </ul>
+                    </div>
+
+
+                    <div class="info-card">
+                        <h3><span class="icon-causes">🦠</span> <span data-i18n="disease:causes">Causes</span></h3>
+                        <p id="d-causes">
+                            <!-- Injected -->
+                        </p>
+                    </div>
+
+
+                    <div class="info-card">
+                        <h3><span class="icon-solutions">🛡️</span> <span data-i18n="disease:solutions">Possible Solutions</span></h3>
+                        <ul id="d-solutions">
+                            <!-- Injected -->
+                        </ul>
+                    </div>
+
+                </div>
+
+                <div class="back-nav">
+                    <a href="#" id="back-crops" class="back-btn" data-i18n="disease:back_crops">&larr; Back to Crops</a>
+                    <a href="district.html" class="back-btn" style="border-style: dashed;" data-i18n="disease:new_district">Select New District</a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script src="static/translations.js"></script>
+    <script src="static/main.js"></script>
+    <script>
+        const API_KEY = "{{ API_KEY|default:''|escapejs }}";
+
+        const fallbackDatabase = {
+            "paddy": {
+                name: "Rice Blast",
+                image: "paddy_disease.png",
+                symptoms: ["Diamond-shaped white/gray lesions on leaves", "Nodes turn black and break", "Neck of the panicle turns black"],
+                causes: "Caused by the fungus Magnaporthe oryzae. Thrives in high humidity.",
+                solutions: ["Plant resistant varieties", "Avoid excessive nitrogen", "Apply fungicides like Tricyclazole"]
+            },
+            "sugarcane": {
+                name: "Red Rot",
+                image: "sugarcane_disease.png",
+                symptoms: ["Yellowing of upper leaves", "Reddened internal stalk tissue", "Sour, alcoholic smell"],
+                causes: "Caused by the fungus Colletotrichum falcatum.",
+                solutions: ["Use certified seed setts", "Unroot infected clumps", "Crop rotation"]
+            },
+            "cotton": {
+                name: "Leaf Curl Virus",
+                image: "cotton_disease.png",
+                symptoms: ["Curling and crinkling of leaves", "Thickening of leaf veins", "Stunted plant growth"],
+                causes: "Caused by the Cotton leaf curl virus (CLCuV), transmitted by whiteflies.",
+                solutions: ["Cultivate resistant varieties", "Control whiteflies with insecticides", "Eradicate weed hosts"]
+            },
+            "maize": {
+                name: "Turcicum Leaf Blight",
+                image: "generic_disease.png",
+                symptoms: ["Long, elliptical, grayish-green lesions", "Premature drying of leaves", "Reduced grain filling"],
+                causes: "Fungal pathogen Exserohilum turcicum.",
+                solutions: ["Crop rotation", "Seed treatment", "Foliar spray of Mancozeb"]
+            },
+            "jowar": {
+                name: "Grain Smut",
+                image: "generic_disease.png",
+                symptoms: ["Individual grains replaced by smut sori", "Sori covered by cream colored membrane", "Black powdery spores inside grains"],
+                causes: "Fungus Sphacelotheca sorghi.",
+                solutions: ["Seed treatment with sulfur", "Remove infected heads", "Use resistant hybrids"]
+            },
+            "groundnut": {
+                name: "Tikka Leaf Spot",
+                image: "generic_disease.png",
+                symptoms: ["Small dark spots on leaves", "Yellow halo around spots", "Defoliation in severe cases"],
+                causes: "Fungal pathogens Cercospora.",
+                solutions: ["Early sowing", "Crop rotation", "Spray Carbendazim"]
+            },
+            "ragi": {
+                name: "Ragi Blast",
+                image: "generic_disease.png",
+                symptoms: ["Spindle shaped lesions on leaves", "Neck and finger infection", "Brown to black spots"],
+                causes: "Fungus Pyricularia grisea.",
+                solutions: ["Seed treatment", "Resistant varieties (GPU-28, MR-1)", "Fungicide spray"]
+            },
+            "coffee": {
+                name: "Coffee Leaf Rust",
+                image: "generic_disease.png",
+                symptoms: ["Yellow-orange powdery spots on leaf underside", "Defoliation", "Berry rot"],
+                causes: "Fungus Hemileia vastatrix.",
+                solutions: ["Apply Bordeaux mixture", "Maintain proper shade", "Resistant cultivars like S.795"]
+            },
+            "arecanut": {
+                name: "Koleroga (Fruit Rot)",
+                image: "generic_disease.png",
+                symptoms: ["Water soaked lesions on nuts", "Dropping of nuts", "White fungal growth"],
+                causes: "Fungus Phytophthora meadii.",
+                solutions: ["Bordeaux mixture spray before monsoon", "Covering bunches with polythene", "Cleaning garden"]
+            },
+            "coconut": {
+                name: "Bud Rot",
+                image: "generic_disease.png",
+                symptoms: ["Yellowing of central leaf", "Heart leaf turns brown", "Decay of the bud"],
+                causes: "Fungus Phytophthora palmivora.",
+                solutions: ["Cutting infected parts", "Applying Bordeaux paste", "Better drainage"]
+            },
+            "tomato": {
+                name: "Early Blight",
+                image: "generic_disease.png",
+                symptoms: ["Concentric rings on leaves", "Stem lesions", "Fruit rot near stem"],
+                causes: "Fungus Alternaria solani.",
+                solutions: ["Staking plants", "Removing lower leaves", "Fungicide application"]
+            },
+            "generic": {
+                name: "Leaf Spot / Blight",
+                image: "generic_disease.png",
+                symptoms: ["Yellowing of leaf edges", "Brown/black necrotic spots", "Premature leaf drop"],
+                causes: "Fungal or bacterial pathogens triggered by high moisture.",
+                solutions: ["Improve drainage", "Destroy affected leaves", "Apply copper-based fungicides"]
+            }
+        };
+
+        async function fetchDiseaseFromGemini(crop, district) {
+            if (API_KEY === 'YOUR_API_KEY' || API_KEY === '' || API_KEY.startsWith('project-')) {
+                throw new Error('API Key Missing');
+            }
+
+            const lang = localStorage.getItem('preferredLang') || 'en';
+            const prompt = lang === 'en' 
+                ? `Provide information about a major disease for the crop "${crop}" in ${district}, Karnataka. 
+                Return ONLY a JSON object (no markdown, no extra text) with these keys:
+                "name": string (disease name),
+                "symptoms": array of strings,
+                "causes": string,
+                "solutions": array of strings.`
+                : `"${crop}" ಹೆಸರಿನ ಸಸ್ಯಕ್ಕೆ ತಗಲುವ ಪ್ರಮುಖ ರೋಗದ ಬಗ್ಗೆ ಮಾಹಿತಿ ನೀಡಿ (${district}, ಕರ್ನಾಟಕ). 
+                ಈ ಕೆಳಗಿನ ಕೀಲಿಗಳೊಂದಿಗೆ ಕೇವಲ JSON ಆಬ್ಜೆಕ್ಟ್ ಅನ್ನು ಹಿಂತಿರುಗಿಸಿ (ಯಾವುದೇ ಮಾರ್ಕ್‌ಡೌನ್ ಅಥವಾ ಹೆಚ್ಚುವರಿ ಪಠ್ಯವಿಲ್ಲದೆ):
+                "name": ಸ್ಟ್ರಿಂಗ್ (ರೋಗದ ಹೆಸರು - ಕನ್ನಡದಲ್ಲಿ),
+                "symptoms": ಸ್ಟ್ರಿಂಗ್‌ಗಳ ಅರೇ (ಲಕ್ಷಣಗಳು - ಕನ್ನಡದಲ್ಲಿ),
+                "causes": ಸ್ಟ್ರಿಂಗ್ (ಕಾರಣ - ಕನ್ನಡದಲ್ಲಿ),
+                "solutions": ಸ್ಟ್ರಿಂಗ್‌ಗಳ ಅರೇ (ಪರಿಹಾರಗಳು - ಕನ್ನಡದಲ್ಲಿ).`;
+
+            const response = await fetch(`https://huggingface.co/marwaALzaabi/plant-disease-detection-vit=${API_KEY}`, {
+
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { responseMimeType: "application/json" }
+                })
+            });
+
+            if (!response.ok) throw new Error('Gemini API Error');
+            const data = await response.json();
+            console.log("Response from hugging face:",result)
+            const text = data.candidates[0].content.parts[0].text;
+            
+            // Clean markdown blocks if Gemini returns them
+            const cleanJson = text.replace(/```json|```/g, '').trim();
+            return JSON.parse(cleanJson);
+        }
+
+        function populateUI(details, cropName, district) {
+            document.getElementById('d-crop').textContent = `${cropName} (${district})`;
+            document.getElementById('d-name').textContent = details.name;
+            document.getElementById('d-image').src = details.image || "generic_disease.png";
+            
+            const symUL = document.getElementById('d-symptoms');
+            symUL.innerHTML = '';
+            details.symptoms.forEach(sym => {
+                const li = document.createElement('li');
+                li.textContent = sym;
+                symUL.appendChild(li);
+            });
+
+            document.getElementById('d-causes').textContent = details.causes;
+
+            const solUL = document.getElementById('d-solutions');
+            solUL.innerHTML = '';
+            details.solutions.forEach(sol => {
+                const li = document.createElement('li');
+                li.textContent = sol;
+                solUL.appendChild(li);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const cropParam = urlParams.get('crop');
+            const districtParam = urlParams.get('district') || "Karnataka";
+
+            if (!cropParam) {
+                document.getElementById('error-msg').style.display = 'block';
+                return;
+            }
+
+            const loading = document.getElementById('loading-overlay');
+            const detailsArea = document.getElementById('disease-details');
+
+            loading.style.display = 'block';
+
+            try {
+                // Attempt Gemini Fetch
+                const aiDetails = await fetchDiseaseFromGemini(cropParam, districtParam);
+                populateUI(aiDetails, cropParam, districtParam);
+                detailsArea.style.display = 'block';
+            } catch (err) {
+                console.warn('Gemini Fetch failed, using fallback:', err);
+                // Use Fallback
+                const cropKey = cropParam.toLowerCase();
+                let fallback = null;
+                
+                // Try exact match first
+                for (const key in fallbackDatabase) {
+                    if (cropKey.includes(key)) {
+                        fallback = JSON.parse(JSON.stringify(fallbackDatabase[key]));
+                        break;
+                    }
+                }
+
+                if (!fallback) {
+                    fallback = JSON.parse(JSON.stringify(fallbackDatabase["generic"]));
+                    fallback.name = `${cropParam} ${fallback.name}`;
+                }
+
+                populateUI(fallback, cropParam, districtParam);
+                detailsArea.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+            }
+
+            // Set Back link
+            const backBtn = document.getElementById('back-crops');
+            if (districtParam) {
+                backBtn.href = `crops.html?district=${encodeURIComponent(districtParam.toLowerCase().replace(/ /g, '-'))}`;
+            } else {
+                backBtn.href = 'crops.html';
+            }
+        });
+    </script>
+</body>
+</html>

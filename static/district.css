@@ -1,0 +1,15 @@
+@import url('index.css');
+
+/* District page customizations */
+.container {
+    max-width: 680px;
+}
+
+.select-field select {
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%234ade80" d="M2 5L0 0h4z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 1.1rem center;
+    background-size: 10px;
+    padding-right: 2rem;
+}

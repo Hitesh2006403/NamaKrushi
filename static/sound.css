@@ -1,0 +1,53 @@
+body {
+    font-family: 'Outfit', sans-serif;
+    background: linear-gradient(160deg, #0b1220, #173044);
+    color: #f8fafc;
+    text-align: center;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: min(480px, 95%);
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.35);
+}
+
+h1 { color: #7ac142; }
+
+button {
+    padding: 0.8rem 1.2rem;
+    margin: 0.4rem;
+    background: linear-gradient(135deg, #7ac142, #4ade80);
+    color: #0a1628;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+button:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
+#result-box {
+    margin-top: 1.3rem;
+    padding: 1rem;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    display: inline-block;
+    width: 100%;
+}
+
+.lang-switch button {
+    background: #1e40af;
+    color: #fff;
+}
+
+.lang-switch button:hover { background: #0f2a74; }

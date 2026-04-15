@@ -1,0 +1,18 @@
+@import url('index.css');
+
+/* Login page customizations */
+.container {
+    max-width: 420px;
+}
+
+.form-header h2 {
+    font-size: 2rem;
+}
+
+.password-requirements {
+    max-width: 100%;
+}
+
+.login-link {
+    font-size: 0.93rem;
+}

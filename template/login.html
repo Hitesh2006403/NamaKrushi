@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login - Namakrishii</title>
+    <link rel="stylesheet" href="static/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="lang-switcher">
+        <button class="lang-btn" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn" onclick="setLanguage('kn')">ಕನ್ನಡ</button>
+    </div>
+
+    <div class="container">
+
+        <div class="form-wrapper glass">
+            <div class="form-header">
+                <h2 data-i18n="login:title">Welcome Back</h2>
+                <p data-i18n="login:subtitle">Login to Namma Krishi Portal</p>
+            </div>
+
+            
+            <form id="login-form" class="registration-form">
+                <div class="input-group">
+                    <div class="input-field">
+                        <label for="username" data-i18n="login:username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required data-i18n="login:username">
+                    </div>
+                </div>
+
+
+                <div class="input-group">
+                    <div class="input-field password-field">
+                        <label for="password" data-i18n="login:password">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required data-i18n="login:password"
+                                   onfocus="showRequirements('login-pw-requirements')" 
+                                   onblur="hideRequirements('login-pw-requirements')"
+                                   onkeyup="validatePassword(this.value, 'login-pw-requirements')">
+
+                            <button type="button" class="toggle-password" onclick="toggleVisibility('password')">
+                                <svg id="eye-password" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                <svg id="eye-off-password" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                            </button>
+                        </div>
+                        <div id="login-pw-requirements" class="password-requirements">
+                            <div class="requirement" id="req-capital">
+                                <span class="requirement-dot"></span>
+                                <span class="requirement-text">Capital letter (A-Z)</span>
+                            </div>
+                            <div class="requirement" id="req-small">
+                                <span class="requirement-dot"></span>
+                                <span class="requirement-text">Small letter (a-z)</span>
+                            </div>
+                            <div class="requirement" id="req-number">
+                                <span class="requirement-dot"></span>
+                                <span class="requirement-text">Number (0-9)</span>
+                            </div>
+                            <div class="requirement" id="req-special">
+                                <span class="requirement-dot"></span>
+                                <span class="requirement-text">Special character (@, #, $, etc.)</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right; margin-top: 0.25rem;">
+                            <a href="#" class="forgot-password" onclick="sendOTP(event)" data-i18n="login:forgot">Forgot password?</a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" style="margin-top: 1.5rem;" data-i18n="login:login">Log In</button>
+                
+                <p class="login-link"><span data-i18n="login:no_account">Don't have an account?</span> <a href="index.html" data-i18n="index:register">Register</a></p>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="reset-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-i18n="reset:title">Reset Password</h3>
+                <button type="button" class="close-modal" onclick="closeResetModal()">&times;</button>
+            </div>
+            <div id="email-section">
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;" data-i18n="reset:otp_instructions">Please enter your registered email address to receive a 6-digit OTP.</p>
+                <div class="input-field" style="margin-bottom: 1.5rem;">
+                    <label for="reset-email" data-i18n="reset:email_label">Email Address</label>
+                    <input type="email" id="reset-email" placeholder="example@mail.com" required data-i18n="reset:email_placeholder">
+                </div>
+                <button type="button" class="submit-btn" style="width: 100%;" onclick="requestOTP()" data-i18n="reset:send_otp">Send OTP</button>
+            </div>
+
+            <div id="otp-section" style="display: none;">
+                <div class="otp-container" style="margin-bottom: 1.5rem;">
+                    <p id="otp-message" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;" data-i18n="reset:otp_sent">An OTP has been sent to your email.</p>
+                    <div class="input-field">
+                        <label for="otp-input" data-i18n="reset:otp_label">Enter 6-Digit OTP</label>
+                        <input type="text" id="otp-input" maxlength="6" placeholder="000000" style="text-align: center; letter-spacing: 0.5rem; font-size: 1.2rem; font-weight: 700;">
+                    </div>
+                </div>
+                <button type="button" class="submit-btn" style="width: 100%;" onclick="verifyOTP()" data-i18n="reset:verify_next">Verify &amp; Next</button>
+                <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+                    Didn't receive it? <a href="#" onclick="requestOTP()" style="color: var(--primary); text-decoration: none;" data-i18n="reset:resend">Resend OTP</a>
+                </p>
+            </div>
+
+            <div id="new-password-section" style="display: none;">
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;" data-i18n="reset:new_pw_instructions">Verification successful! Please enter your new password below.</p>
+                
+                <div class="input-field password-field" style="margin-bottom: 1rem;">
+                    <label for="new-password" data-i18n="reset:new_pw">New Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="new-password" placeholder="Enter new password"
+                               onkeyup="validatePassword(this.value, 'reset-pw-requirements')">
+                        <button type="button" class="toggle-password" onclick="toggleVisibility('new-password')">
+                            <svg id="eye-new-password" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            <svg id="eye-off-new-password" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="input-field password-field" style="margin-bottom: 1rem;">
+                    <label for="confirm-password" data-i18n="reset:confirm_pw">Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirm-password" placeholder="Confirm new password">
+                        <button type="button" class="toggle-password" onclick="toggleVisibility('confirm-password')">
+                            <svg id="eye-confirm-password" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            <svg id="eye-off-confirm-password" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="reset-pw-requirements" class="password-requirements active" style="margin-bottom: 1.5rem; position: static;">
+                    <div class="requirement" id="reset-req-capital">
+                        <span class="requirement-dot"></span>
+                        <span class="requirement-text">Capital letter (A-Z)</span>
+                    </div>
+                    <div class="requirement" id="reset-req-small">
+                        <span class="requirement-dot"></span>
+                        <span class="requirement-text">Small letter (a-z)</span>
+                    </div>
+                    <div class="requirement" id="reset-req-number">
+                        <span class="requirement-dot"></span>
+                        <span class="requirement-text">Number (0-9)</span>
+                    </div>
+                    <div class="requirement" id="reset-req-special">
+                        <span class="requirement-dot"></span>
+                        <span class="requirement-text">Special character (@, #, $, etc.)</span>
+                    </div>
+                </div>
+
+                <button type="button" class="submit-btn" style="width: 100%;" onclick="resetPassword()" data-i18n="reset:reset_btn">Reset Password</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="static/translations.js"></script>
+    <script src="static/main.js"></script>
+    <script>
+
+        function toggleVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const eyeIcon = document.getElementById('eye-' + inputId);
+            const eyeOffIcon = document.getElementById('eye-off-' + inputId);
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.style.display = 'none';
+                eyeOffIcon.style.display = 'block';
+            } else {
+                input.type = 'password';
+                eyeIcon.style.display = 'block';
+                eyeOffIcon.style.display = 'none';
+            }
+        }
+
+        // Password Validation Logic
+        function showRequirements(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function hideRequirements(id) {
+            // Keep it visible for a moment so user can see it's all valid
+            setTimeout(() => {
+                const el = document.getElementById(id);
+                if (el && !document.activeElement.closest('.password-wrapper')) {
+                    el.classList.remove('active');
+                }
+            }, 1000);
+        }
+
+        function validatePassword(password, requirementsId) {
+            const container = document.getElementById(requirementsId);
+            if (!container) return;
+
+            const reqs = requirementsId === 'reset-pw-requirements' ? {
+                'reset-req-capital': /[A-Z]/.test(password),
+                'reset-req-small': /[a-z]/.test(password),
+                'reset-req-number': /[0-9]/.test(password),
+                'reset-req-special': /[^A-Za-z0-9]/.test(password)
+            } : {
+                'req-capital': /[A-Z]/.test(password),
+                'req-small': /[a-z]/.test(password),
+                'req-number': /[0-9]/.test(password),
+                'req-special': /[^A-Za-z0-9]/.test(password)
+            };
+
+            for (const [id, isValid] of Object.entries(reqs)) {
+                const element = container.querySelector('#' + id);
+                if (element) {
+                    if (isValid) {
+                        element.classList.add('valid');
+                    } else {
+                        element.classList.remove('valid');
+                    }
+                }
+            }
+        }
+
+        // Reset Flow Logic
+        function sendOTP(e) {
+            if (e) e.preventDefault();
+            document.getElementById('reset-modal').classList.add('active');
+            document.getElementById('email-section').style.display = 'block';
+            document.getElementById('otp-section').style.display = 'none';
+            document.getElementById('new-password-section').style.display = 'none';
+        }
+
+        async function requestOTP() {
+            const email = document.getElementById('reset-email').value.trim();
+            const lang = localStorage.getItem('preferredLang') || 'en';
+            const btn = document.querySelector('#email-section .submit-btn');
+
+            if (!email || !email.includes('@')) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            const originalBtnText = btn.textContent;
+            btn.textContent = translations[lang].reset.sending || 'Sending...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/api/request-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    const msgText = translations[lang].reset.otp_sent || 'OTP sent to your email.';
+                    alert(msgText);
+                    const messageEl = document.getElementById('otp-message');
+                    if (messageEl) messageEl.textContent = msgText;
+                    document.getElementById('email-section').style.display = 'none';
+                    document.getElementById('otp-section').style.display = 'block';
+                } else {
+                    alert(data.message || 'Failed to send OTP.');
+                }
+            } catch (err) {
+                alert('Connection error. Please try again.');
+            } finally {
+                btn.textContent = originalBtnText;
+                btn.disabled = false;
+            }
+        }
+
+        async function verifyOTP() {
+            const userInput = document.getElementById('otp-input').value;
+            const email = document.getElementById('reset-email').value.trim();
+            const lang = localStorage.getItem('preferredLang') || 'en';
+
+            try {
+                const response = await fetch('/api/verify-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, code: userInput })
+                });
+
+                if (response.ok) {
+                    document.getElementById('otp-section').style.display = 'none';
+                    document.getElementById('new-password-section').style.display = 'block';
+                } else {
+                    alert(translations[lang].reset.otp_invalid || 'Invalid or expired OTP. Please try again.');
+                }
+            } catch (err) {
+                alert('Error verifying OTP.');
+            }
+        }
+
+        async function resetPassword() {
+            const lang = localStorage.getItem('preferredLang') || 'en';
+            const email = document.getElementById('reset-email').value.trim();
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const requirements = document.getElementById('reset-pw-requirements');
+            const allValid = Array.from(requirements.querySelectorAll('.requirement')).every(req => req.classList.contains('valid'));
+            const btn = document.querySelector('#new-password-section .submit-btn');
+            const originalBtnText = btn.textContent;
+
+            if (!newPassword || !confirmPassword) {
+                alert('Please fill in both password fields.');
+                return;
+            }
+            if (!allValid) {
+                alert('Password does not meet all requirements.');
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                alert('Passwords do not match.');
+                return;
+            }
+            if (!email) {
+                alert('Session expired. Please start the process again.');
+                return;
+            }
+
+            btn.textContent = translations[lang].reset.resetting || 'Resetting...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/api/reset-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, new_password: newPassword })
+                });
+
+                if (response.ok) {
+                    alert(translations[lang].reset.reset_success || 'Password reset successful! You can now log in.');
+                    closeResetModal();
+                } else {
+                    const data = await response.json();
+                    alert(data.message || 'Failed to reset password.');
+                }
+            } catch (err) {
+                alert('Connection error during password reset: ' + err.message);
+            } finally {
+                btn.textContent = originalBtnText;
+                btn.disabled = false;
+            }
+        }
+
+        // Handle Login Form Submission
+        document.getElementById('login-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Local fallback demo mode when backend is not available
+            const lastUser = localStorage.getItem('lastRegisteredUser');
+            if (lastUser) {
+                try {
+                    const saved = JSON.parse(lastUser);
+                    if (username === saved.username && password === saved.password) {
+                        alert('Login successful (demo).');
+                        window.location.href = 'district.html';
+                        return;
+                    }
+                } catch (e) {
+                    // ignore parse error
+                }
+            }
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    window.location.href = "/district.html";
+                } else {
+                    alert(data.message || 'Login failed.');
+                }
+            } catch (err) {
+                // If backend is down, fallback to local user from registration step
+                if (lastUser) {
+                    alert('Login connection error; attempting demo fallback...');
+                    const saved = JSON.parse(lastUser);
+                    if (saved.username === username && saved.password === password) {
+                        alert('Demo login successful');
+                        window.location.href = 'district.html';
+                        return;
+                    }
+                    alert('Demo login failed: invalid credentials.');
+                } else {
+                    alert('Login connection error. No local user data found.');
+                }
+            }
+        };
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('reset-modal');
+            if (event.target == modal) {
+                closeResetModal();
+            }
+        }
+    </script>
+</body>
+</html>

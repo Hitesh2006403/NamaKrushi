@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Disease Detection - Namakrishii</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='disease_detect.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+        .analyze-btn {
+            width: 100%;
+            padding: 1rem;
+            margin-top: 1.25rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7ac142, #4ade80);
+            color: #0a1628;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.3px;
+            display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+        }
+        .analyze-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(122, 193, 66, 0.4);
+        }
+        .analyze-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        /* Loading Pulse */
+        .scanning-loader {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 2rem;
+        }
+        .pulse-ring {
+            width: 64px; height: 64px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: var(--primary);
+            animation: spin 0.9s linear infinite;
+        }
+        .pulse-ring::after {
+            content: '';
+            position: absolute;
+            inset: 5px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: #4ade80;
+            animation: spin 1.4s linear infinite reverse;
+        }
+        .pulse-ring { position: relative; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Results */
+        #resultsCard { display: none; margin-top: 1.75rem; }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--input-border);
+            margin-bottom: 1.5rem;
+        }
+        .disease-tag {
+            background: rgba(239,68,68,0.15);
+            color: #f87171;
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 8px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .disease-tag.healthy {
+            background: rgba(74,222,128,0.15);
+            color: #4ade80;
+            border-color: rgba(74,222,128,0.3);
+        }
+        .disease-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #cbd5e1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.15rem;
+        }
+        .severity-bar-wrap {
+            margin-top: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .severity-label { font-size: 0.8rem; color: var(--text-muted); }
+        .severity-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--input-border);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        .severity-fill {
+            height: 100%;
+            border-radius: 99px;
+            transition: width 1s ease;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+        @media (max-width: 600px) { .info-grid { grid-template-columns: 1fr; } }
+
+        .info-card {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            padding: 1.1rem 1.25rem;
+        }
+        .info-card.full-width { grid-column: 1 / -1; }
+        .info-card-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--primary);
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .info-card-body {
+            font-size: 0.92rem;
+            color: var(--text-main);
+            line-height: 1.65;
+        }
+        .info-card-body ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+        .info-card-body ul li { margin-bottom: 0.25rem; }
+
+        /* Medicine Pills */
+        .medicine-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.4rem;
+        }
+        .pill {
+            background: rgba(122,193,66,0.12);
+            border: 1px solid rgba(122,193,66,0.25);
+            border-radius: 99px;
+            padding: 0.25rem 0.8rem;
+            font-size: 0.82rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Confidence badge */
+        .confidence-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(122,193,66,0.1);
+            border: 1px solid rgba(122,193,66,0.2);
+            padding: 0.2rem 0.7rem;
+            border-radius: 99px;
+            font-size: 0.78rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Nav buttons */
+        .nav-row {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+        }
+        .nav-btn:hover { border-color: var(--primary); color: var(--text-main); }
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #7ac142, #4ade80);
+            color: #0a1628;
+            border-color: transparent;
+        }
+        .nav-btn.primary:hover { box-shadow: 0 6px 20px rgba(122,193,66,0.35); }
+    </style>
+</head>
+<body>
+    <div class="lang-switcher">
+        <button class="lang-btn" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn" onclick="setLanguage('kn')">ಕನ್ನಡ</button>
+    </div>
+
+    <!-- Automatically re-fetch results if language is changed after analysis -->
+    <script>
+        window.addEventListener('languageChanged', () => {
+            if (document.getElementById('resultsCard') && document.getElementById('resultsCard').style.display === 'block') {
+                analyzeDisease();
+            }
+        });
+    </script>
+
+    <div class="container">
+        <div class="form-wrapper glass" style="padding: 2.5rem;">
+
+            <!-- Header -->
+            <div class="form-header" style="margin-bottom: 2rem;">
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem;">
+                    <span style="font-size:2rem;">🔬</span>
+                    <h2 style="margin:0;" data-i18n="detect:title">AI Disease Detection</h2>
+                </div>
+                <p style="color:var(--text-muted); font-size:0.95rem;" data-i18n="detect:subtitle">
+                    Upload a photo of your plant and let AI identify the disease instantly
+                </p>
+                <div id="districtContextBadge" style="display: none; margin-top: 0.75rem; background: rgba(122,193,66,0.1); border: 1px solid rgba(122,193,66,0.3); padding: 0.35rem 0.85rem; border-radius: 99px; font-size: 0.8rem; color: var(--primary); font-weight: 600; width: fit-content; align-items: center; gap: 0.4rem;">
+                    📍 Regional Context Active
+                </div>
+            </div>
+
+            <!-- Upload Zone -->
+            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+                <span class="upload-icon">📷</span>
+                <div class="upload-title" data-i18n="detect:upload_title">Click or drag a photo here</div>
+                <div class="upload-sub" data-i18n="detect:upload_sub">Supports JPG, PNG, WEBP — Max 10MB</div>
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
+
+            <!-- Preview -->
+            <div class="preview-wrapper" id="previewWrapper">
+                <img id="previewImg" alt="Plant preview">
+                <button class="remove-img" onclick="removeImage()" title="Remove image">✕</button>
+            </div>
+
+            <!-- Analyze Button -->
+            <button class="analyze-btn" id="analyzeBtn" onclick="analyzeDisease()" disabled data-i18n="detect:analyze_btn">
+                🔬 Analyze Disease
+            </button>
+
+            <!-- Scanning Loader -->
+            <div class="scanning-loader" id="scanLoader">
+                <div class="pulse-ring"></div>
+                <p style="color:var(--text-muted); font-size:0.92rem;" data-i18n="detect:scanning">AI is scanning your plant image...</p>
+            </div>
+
+            <!-- Results Card -->
+            <div id="resultsCard">
+                <div class="result-header">
+                    <div style="flex:1;">
+                        <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.4rem;">
+                            <span class="disease-tag" id="diseaseTag">DISEASE DETECTED</span>
+                            <span class="confidence-badge" id="confidenceBadge">⚡ 94% confident</span>
+                        </div>
+                        <div class="disease-name" id="diseaseName">—</div>
+                        <div class="severity-bar-wrap">
+                            <span class="severity-label" data-i18n="detect:severity">Severity:</span>
+                            <div class="severity-bar">
+                                <div class="severity-fill" id="severityFill" style="width:0%; background: #ef4444;"></div>
+                            </div>
+                            <span class="severity-label" id="severityText">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <!-- Symptoms -->
+                    <div class="info-card">
+                        <div class="info-card-title">⚠️ <span data-i18n="detect:symptoms">Symptoms</span></div>
+                        <div class="info-card-body" id="symptomsText">—</div>
+                    </div>
+                    <!-- Causes -->
+                    <div class="info-card">
+                        <div class="info-card-title">🔍 <span data-i18n="detect:causes">Causes</span></div>
+                        <div class="info-card-body" id="causesText">—</div>
+                    </div>
+                    <!-- Solution -->
+                    <div class="info-card">
+                        <div class="info-card-title">✅ <span data-i18n="detect:solution">Treatment & Solution</span></div>
+                        <div class="info-card-body" id="solutionText">—</div>
+                    </div>
+                    <!-- Prevention -->
+                    <div class="info-card">
+                        <div class="info-card-title">🛡️ <span data-i18n="detect:prevention">Prevention</span></div>
+                        <div class="info-card-body" id="preventionText">—</div>
+                    </div>
+                    <!-- Medicines -->
+                    <div class="info-card full-width">
+                        <div class="info-card-title">💊 <span data-i18n="detect:medicines">Recommended Medicines / Pesticides</span></div>
+                        <div class="medicine-pills" id="medicinesPills"></div>
+                    </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="nav-row">
+                    <button class="nav-btn primary" onclick="resetDetection()" data-i18n="detect:try_another">🔄 Try Another Image</button>
+                    <button class="nav-btn" onclick="speakResult()" id="btnSpeak" style="display:none; border-color:#3b82f6; color:#3b82f6;">🔊 Read Aloud</button>
+                    <button class="nav-btn" onclick="stopSpeech()" id="btnStop" style="display:none; border-color:#ef4444; color:#ef4444;">⛔ Stop</button>
+                    <a href="crops.html" class="nav-btn" id="backCrops" data-i18n="detect:back_crops">← Back to Crops</a>
+                </div>
+            </div>
+
+            <!-- Initial back button (visible before analysis) -->
+            <div style="text-align:center; margin-top:1.5rem;" id="backWrap">
+                <a href="crops.html" class="nav-btn" style="display:inline-block; min-width:180px;" data-i18n="detect:back_crops">← Back to Crops</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="static/translations.js"></script>
+    <script src="static/main.js"></script>
+   <script>
+    const HF_ENDPOINT = 'http://localhost:3000/predict';  // ✅ Fixed — actual URL string
+let selectedFile = null;
+let base64Image = null;
+let imageMime = null;
+let currentDistrictName = "";
+let currentSpeechText = "";
+
+// --- Upload Handling ---
+const uploadZone = document.getElementById('uploadZone');
+const fileInput  = document.getElementById('fileInput');
+
+uploadZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    uploadZone.classList.add('drag-over');
+});
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadZone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) handleFile(file);
+});
+fileInput.addEventListener('change', () => {
+    if (fileInput.files[0]) handleFile(fileInput.files[0]);
+});
+
+function handleFile(file) {
+    selectedFile = file;
+    imageMime = file.type;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        base64Image = dataUrl.split(',')[1];
+        document.getElementById('previewImg').src = dataUrl;
+        document.getElementById('previewWrapper').style.display = 'block';
+        document.getElementById('uploadZone').style.display = 'none';
+        document.getElementById('analyzeBtn').disabled = false;
+        document.getElementById('resultsCard').style.display = 'none';
+        document.getElementById('backWrap').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeImage() {
+    selectedFile = null;
+    base64Image = null;
+    imageMime = null;
+    document.getElementById('fileInput').value = '';
+    document.getElementById('previewWrapper').style.display = 'none';
+    document.getElementById('uploadZone').style.display = 'block';
+    document.getElementById('analyzeBtn').disabled = true;
+    document.getElementById('resultsCard').style.display = 'none';
+}
+
+function resetDetection() {
+    removeImage();
+    document.getElementById('scanLoader').style.display = 'none';
+}
+
+// --- District badge setup ---
+document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const distKey = params.get('district');
+    if (distKey) {
+        const lang = localStorage.getItem('preferredLang') || 'en';
+        currentDistrictName = (typeof translations !== 'undefined' && translations[lang]?.district?.[distKey])
+            ? translations[lang].district[distKey]
+            : distKey.replace('-', ' ').toUpperCase();
+        const badge = document.getElementById('districtContextBadge');
+        badge.style.display = 'inline-flex';
+        badge.innerHTML = `📍 <span>Optimized for: <b>${currentDistrictName}</b></span>`;
+    }
+});
+
+// --- Speech ---
+function speakResult() {
+    if (!currentSpeechText) return;
+    const lang = localStorage.getItem('preferredLang') || 'en';
+    let speech = new SpeechSynthesisUtterance(currentSpeechText);
+    speech.lang = (lang === "kn") ? "kn-IN" : "en-US";
+    speech.rate = 0.9;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(speech);
+}
+
+function stopSpeech() {
+    window.speechSynthesis.cancel();
+}
+
+// --- Analysis ---  ✅ Only one definition now
+async function analyzeDisease() {
+    if (!base64Image) return;
+    const lang = localStorage.getItem('preferredLang') || 'en';
+
+    const btn = document.getElementById('analyzeBtn');
+    btn.disabled = true;
+    document.getElementById('resultsCard').style.display = 'none';
+    document.getElementById('scanLoader').style.display = 'flex';
+    document.getElementById('backWrap').style.display = 'none';
+
+    try {
+        const response = await fetch(HF_ENDPOINT, {   // ✅ clean fetch with base64
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                image: `data:${imageMime};base64,${base64Image}`
+            })
+        });
+
+        const data = await response.json();
+        console.log('Server response:', data);
+
+        if (data.error) throw new Error(`API Error: ${data.error}`);
+        if (!Array.isArray(data) || data.length === 0) throw new Error('Empty response');
+
+        const bestMatch = data[0];
+        const rawLabel = bestMatch.label || 'Unknown';
+        const score = bestMatch.score || 0;
+        const isHealthy = rawLabel.toLowerCase().includes('healthy');
+        const diseaseName = rawLabel.replace(/___/g, ' - ').replace(/__/g, ' ').replace(/_/g, ' ');
+
+        const result = {
+            is_plant: true,
+            disease_name: diseaseName,
+            is_healthy: isHealthy,
+            severity: isHealthy ? "None" : (score > 0.8 ? "High" : "Medium"),
+            severity_percent: isHealthy ? 0 : Math.round(score * 100),
+            confidence: Math.round(score * 100),
+            symptoms: isHealthy
+                ? ["No visible signs of stress or infection.", "Healthy leaf color and structure."]
+                : ["Visible spots or lesions on leaves", "Discoloration or wilting"],
+            causes: isHealthy
+                ? ["Optimal growing conditions."]
+                : ["Fungal, bacterial, or viral infection.", "Poor environmental conditions."],
+            solution: isHealthy
+                ? ["Continue current care routines."]
+                : ["Remove and destroy infected parts immediately.", "Apply appropriate fungicide."],
+            prevention: isHealthy
+                ? ["Ensure proper air circulation", "Avoid overhead watering"]
+                : ["Proper air circulation.", "Avoid overhead watering.", "Sanitize tools between uses."],
+            medicines: isHealthy ? [] : ["Broad-spectrum fungicide", "Copper-based protective spray"]
+        };
+
+        document.getElementById('scanLoader').style.display = 'none';
+        populateResults(result);
+
+    } catch (err) {
+        console.error('Analysis error:', err);
+        document.getElementById('scanLoader').style.display = 'none';
+        // Fallback result in case of error
+        populateResults({
+            is_plant: true,
+            disease_name: "Could not identify",
+            is_healthy: false,
+            severity: "Unknown",
+            severity_percent: 0,
+            confidence: 0,
+            symptoms: ["Unable to analyze symptoms due to connection error."],
+            causes: ["Server might be down or image format unsupported."],
+            solution: ["Please try again or check your internet connection."],
+            prevention: ["-"],
+            medicines: []
+        });
+    }
+}
+
+function populateResults(result) {
+    if (!result) return;
+    
+    document.getElementById('resultsCard').style.display = 'block';
+    
+    const tag = document.getElementById('diseaseTag');
+    if (result.is_healthy) {
+        tag.textContent = 'HEALTHY PLANT';
+        tag.className = 'disease-tag healthy';
+    } else {
+        tag.textContent = 'DISEASE DETECTED';
+        tag.className = 'disease-tag';
+    }
+    
+    document.getElementById('confidenceBadge').innerHTML = `⚡ ${result.confidence}% confident`;
+    document.getElementById('diseaseName').innerHTML = result.disease_name;
+    
+    const fill = document.getElementById('severityFill');
+    fill.style.width = `${result.severity_percent}%`;
+    fill.style.background = result.is_healthy ? '#4ade80' : (result.severity_percent > 70 ? '#ef4444' : '#f59e0b');
+    document.getElementById('severityText').textContent = result.severity;
+    
+    document.getElementById('symptomsText').innerHTML = `<ul>${result.symptoms.map(s => `<li>${s}</li>`).join('')}</ul>`;
+    document.getElementById('causesText').innerHTML = `<ul>${result.causes.map(c => `<li>${c}</li>`).join('')}</ul>`;
+    document.getElementById('solutionText').innerHTML = `<ul>${result.solution.map(s => `<li>${s}</li>`).join('')}</ul>`;
+    document.getElementById('preventionText').innerHTML = `<ul>${result.prevention.map(p => `<li>${p}</li>`).join('')}</ul>`;
+    
+    const pills = document.getElementById('medicinesPills');
+    if (result.medicines && result.medicines.length > 0) {
+        pills.innerHTML = result.medicines.map(m => `<span class="pill">${m}</span>`).join('');
+    } else {
+        pills.innerHTML = '<span style="color:var(--text-muted); font-size:0.9rem;">No specific medicines required</span>';
+    }
+
+    currentSpeechText = `Analysis complete. The plant is ${result.is_healthy ? 'healthy' : `infected with ${result.disease_name}`}.`;
+    
+    const btnSpeak = document.getElementById('btnSpeak');
+    const btnStop = document.getElementById('btnStop');
+    if(btnSpeak) btnSpeak.style.display = 'inline-block';
+    if(btnStop) btnStop.style.display = 'inline-block';
+}
+   </script>

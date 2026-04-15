@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Namma Krishi Portal</title>
+    <link rel="stylesheet" href="static/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="lang-switcher">
+        <button class="lang-btn" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn" onclick="setLanguage('kn')">ಕನ್ನಡ</button>
+    </div>
+
+    <div class="container">
+
+        <div class="form-wrapper glass">
+            <div class="form-header">
+                <h2 data-i18n="index:title">Namma Krishi</h2>
+                <p data-i18n="index:subtitle">Karnataka Crop & Disease Management Portal</p>
+            </div>
+
+            
+            <form id="registration-form" class="registration-form">
+                <div class="input-group">
+                    <div class="input-field">
+                        <label for="fullName" data-i18n="index:name">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required data-i18n="index:name">
+                    </div>
+
+                </div>
+
+                <div class="input-row">
+                    <div class="input-field half">
+                        <label for="username" data-i18n="index:username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required data-i18n="index:username">
+                    </div>
+                    <div class="input-field half">
+                        <label for="email" data-i18n="index:email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email address" required data-i18n="index:email">
+                    </div>
+
+                </div>
+
+                <div class="input-group">
+                    <div class="input-field">
+                        <label for="phone" data-i18n="index:phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required data-i18n="index:phone">
+                    </div>
+
+                </div>
+
+                <div class="input-row">
+                    <div class="input-field half password-field">
+                        <label for="password" data-i18n="index:password">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" name="password" placeholder="Create a password" required data-i18n="index:password"
+
+                                   onfocus="showRequirements('reg-pw-requirements')" 
+                                   onblur="hideRequirements('reg-pw-requirements')"
+                                   onkeyup="validatePassword(this.value, 'reg-pw-requirements')">
+                            <button type="button" class="toggle-password" onclick="toggleVisibility('password')">
+                                <svg id="eye-password" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                <svg id="eye-off-password" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                            </button>
+                        </div>
+                        <div id="reg-pw-requirements" class="password-requirements">
+                            <div class="requirement" id="req-capital">
+                                <span class="requirement-dot"></span>
+                                <span class="requirement-text">Capital letter (A-Z)</span>
+                            </div>
+                            <div class="requirement" id="req-small">
+                                <span class="requirement-dot"></span>
+                                <span class="requirement-text">Small letter (a-z)</span>
+                            </div>
+                            <div class="requirement" id="req-number">
+                                <span class="requirement-dot"></span>
+                                <span class="requirement-text">Number (0-9)</span>
+                            </div>
+                            <div class="requirement" id="req-special">
+                                <span class="requirement-dot"></span>
+                                <span class="requirement-text">Special character (@, #, $, etc.)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-field half password-field">
+                        <label for="confirmPassword" data-i18n="index:confirm">Confirm Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required data-i18n="index:confirm">
+
+                            <button type="button" class="toggle-password" onclick="toggleVisibility('confirmPassword')">
+                                <svg id="eye-confirmPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                <svg id="eye-off-confirmPassword" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                            </button>
+                        </div>
+                        <div style="text-align: right; margin-top: 0.25rem;">
+                            <a href="#" class="forgot-password" onclick="showResetModal(event)">Forgot password?</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group gender-group">
+                    <label class="gender-label" data-i18n="index:gender">Gender</label>
+                    <div class="gender-options">
+                        <label class="radio-container">
+                            <input type="radio" name="gender" value="male" required>
+                            <span class="checkmark"></span>
+                            <span data-i18n="index:male">Male</span>
+                        </label>
+                        <label class="radio-container">
+                            <input type="radio" name="gender" value="female">
+                            <span class="checkmark"></span>
+                            <span data-i18n="index:female">Female</span>
+                        </label>
+                        <label class="radio-container">
+                            <input type="radio" name="gender" value="others">
+                            <span class="checkmark"></span>
+                            <span data-i18n="index:others">Others</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" data-i18n="index:register">Register Now</button>
+                
+                <p class="login-link"><span data-i18n="index:has_account">Already have an account? Log in</span> <a href="login.html" data-i18n="login:login">Log in</a></p>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="reset-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-i18n="reset:title">Reset Password</h3>
+                <button type="button" class="close-modal" onclick="closeResetModal()">&times;</button>
+            </div>
+            <div class="captcha-container">
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;" data-i18n="reset:instructions">Please enter the characters from the image below to verify your identity.</p>
+                <div class="captcha-display">
+                    <canvas id="captcha-canvas" width="150" height="50" onclick="generateCaptcha()"></canvas>
+                    <button type="button" class="refresh-captcha" onclick="generateCaptcha()" title="Refresh CAPTCHA">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                    </button>
+                </div>
+                <div class="captcha-input-group">
+                    <label for="captcha-input" data-i18n="reset:label">Enter CAPTCHA</label>
+                    <input type="text" id="captcha-input" placeholder="Type here..." data-i18n="reset:placeholder">
+                </div>
+            </div>
+            <button type="button" class="submit-btn" onclick="verifyCaptcha()" data-i18n="reset:btn">Verify &amp; Reset</button>
+        </div>
+    </div>
+    <script src="static/translations.js"></script>
+    <script src="static/main.js"></script>
+    <script>
+        function toggleVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const eyeIcon = document.getElementById('eye-' + inputId);
+            const eyeOffIcon = document.getElementById('eye-off-' + inputId);
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.style.display = 'none';
+                eyeOffIcon.style.display = 'block';
+            } else {
+                input.type = 'password';
+                eyeIcon.style.display = 'block';
+                eyeOffIcon.style.display = 'none';
+            }
+        }
+
+        // Password Validation Logic
+        function showRequirements(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function hideRequirements(id) {
+            setTimeout(() => {
+                const el = document.getElementById(id);
+                if (el && !document.activeElement.closest('.password-wrapper')) {
+                    el.classList.remove('active');
+                }
+            }, 1000);
+        }
+
+        function validatePassword(password, requirementsId) {
+            const container = document.getElementById(requirementsId);
+            if (!container) return;
+
+            const reqs = {
+                'req-capital': /[A-Z]/.test(password),
+                'req-small': /[a-z]/.test(password),
+                'req-number': /[0-9]/.test(password),
+                'req-special': /[^A-Za-z0-9]/.test(password)
+            };
+
+            for (const [id, isValid] of Object.entries(reqs)) {
+                const element = container.querySelector('#' + id);
+                if (element) {
+                    if (isValid) {
+                        element.classList.add('valid');
+                    } else {
+                        element.classList.remove('valid');
+                    }
+                }
+            }
+        }
+
+        // CAPTCHA Logic
+        let currentCaptcha = "";
+
+        function generateCaptcha() {
+            const canvas = document.getElementById('captcha-canvas');
+            const ctx = canvas.getContext('2d');
+            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+            currentCaptcha = "";
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < 5; i++) {
+                ctx.strokeStyle = `rgba(${Math.random()*150}, ${Math.random()*150}, ${Math.random()*150}, 0.3)`;
+                ctx.beginPath();
+                ctx.moveTo(Math.random()*canvas.width, Math.random()*canvas.height);
+                ctx.lineTo(Math.random()*canvas.width, Math.random()*canvas.height);
+                ctx.stroke();
+            }
+
+            ctx.font = "bold 26px Outfit, sans-serif";
+            ctx.textBaseline = "middle";
+            
+            for (let i = 0; i < 6; i++) {
+                const char = chars.charAt(Math.floor(Math.random() * chars.length));
+                currentCaptcha += char;
+                
+                ctx.save();
+                ctx.translate(15 + i * 22, 25);
+                ctx.rotate((Math.random() - 0.5) * 0.4);
+                ctx.fillStyle = `rgb(${Math.random()*100}, ${Math.random()*100}, ${Math.random()*100})`;
+                ctx.fillText(char, 0, 0);
+                ctx.restore();
+            }
+
+            for (let i = 0; i < 40; i++) {
+                ctx.fillStyle = `rgba(0,0,0,${Math.random()*0.15})`;
+                ctx.beginPath();
+                ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, 1, 0, Math.PI*2);
+                ctx.fill();
+            }
+            
+            document.getElementById('captcha-input').value = "";
+        }
+
+        function showResetModal(e) {
+            e.preventDefault();
+            document.getElementById('reset-modal').classList.add('active');
+            generateCaptcha();
+        }
+
+        function closeResetModal() {
+            document.getElementById('reset-modal').classList.remove('active');
+        }
+
+        function verifyCaptcha() {
+            const lang = localStorage.getItem('preferredLang') || 'en';
+            const userInput = document.getElementById('captcha-input').value;
+            if (userInput.toLowerCase() === currentCaptcha.toLowerCase()) {
+                alert(translations[lang].reset.success);
+                closeResetModal();
+                // Navigate to login page after successful verification
+                window.location.href = "/login.html";
+            } else {
+                alert(translations[lang].reset.fail);
+                generateCaptcha();
+            }
+        }
+
+        // Handle Registration Form Submission
+        document.getElementById('registration-form').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            // If server API is not available in local static mode, simulate registration
+            const fallbackSuccess = true;
+            if (fallbackSuccess) {
+                // Store in browser localStorage for demo purposes
+                localStorage.setItem('lastRegisteredUser', JSON.stringify(data));
+                alert('Registration successful (demo)! Redirecting to login...');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert('Registration successful! Redirecting to login...');
+                    window.location.href = 'login.html';
+                } else {
+                    alert(result.message || 'Registration failed.');
+                }
+            } catch (err) {
+                alert('Connection error during registration. Please ensure backend is running or try demo mode.');
+            }
+        };
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('reset-modal');
+            if (event.target == modal) {
+                closeResetModal();
+            }
+        }
+    </script>
+</body>
+</html>
