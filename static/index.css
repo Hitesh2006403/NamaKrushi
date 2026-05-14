@@ -53,13 +53,19 @@
 .page-nav {
     position: fixed;
     top: 20px;
-    left: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     gap: 10px;
     z-index: 2000;
 }
 
-.page-nav-link {
+.page-nav-link,
+.page-nav-link:link,
+.page-nav-link:visited {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: rgba(15, 23, 42, 0.6);
     backdrop-filter: blur(10px);
     border: 1px solid var(--glass-border);
@@ -73,7 +79,8 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-.page-nav-link:hover {
+.page-nav-link:hover,
+.page-nav-link:focus-visible {
     background: rgba(255, 255, 255, 0.1);
     color: var(--text-main);
     transform: translateY(-2px);
@@ -452,8 +459,6 @@ body {
 
     .page-nav {
         top: 72px;
-        left: 50%;
-        transform: translateX(-50%);
         width: calc(100% - 2rem);
         justify-content: center;
         flex-wrap: wrap;

@@ -179,7 +179,10 @@ const translations = {
             lang_en: "English",
             lang_kn: "ಕನ್ನಡ",
             back: "ಹಿಂದಕ್ಕೆ",
-            continue: "ಮುಂದುವರಿಸಿ"
+            continue: "ಮುಂದುವರಿಸಿ",
+            home: "ಮುಖಪುಟ",
+            about: "ನಮ್ಮ ಬಗ್ಗೆ",
+            weather: "ಹವಾಮಾನ"
         },
         index: {
             title: "ನಮ್ಮ ಕೃಷಿ",
