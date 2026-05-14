@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -55,12 +55,12 @@ button:hover {
 <body>
 
 <div class="container">
-    <h1>🌾 Namma Krishi</h1>
+    <h1>ðŸŒ¾ Namma Krishi</h1>
 
     <!-- Language Switch -->
     <div class="lang-switch">
         <button onclick="switchLanguage('en')">English</button>
-        <button onclick="switchLanguage('kn')">ಕನ್ನಡ</button>
+        <button onclick="switchLanguage('kn')">à²•à²¨à³à²¨à²¡</button>
     </div>
 
     <!-- Upload -->
@@ -74,13 +74,13 @@ button:hover {
         <h2 id="result-title">Detection Result</h2>
         <p id="result-text">Your result will appear here</p>
 
-        <button onclick="speakResult()">🔊 Speak</button>
-        <button onclick="stopSpeech()">⛔ Stop</button>
+        <button onclick="speakResult()">ðŸ”Š Speak</button>
+        <button onclick="stopSpeech()">â›” Stop</button>
     </div>
 </div>
 
 <script src="static/translations.js"></script>
-<script src="static/main.js"></script>
+<script src="static/main.js?v=2"></script>
 <script>
 // Language
 let currentLanguage = "en";
@@ -94,8 +94,8 @@ function switchLanguage(lang) {
     currentLanguage = lang;
 
     if (lang === "kn") {
-        document.getElementById("result-title").innerText = "ಪತ್ತೆ ಫಲಿತಾಂಶ";
-        document.getElementById("result-text").innerText = resultKannada || "ಫಲಿತಾಂಶ ಇಲ್ಲ";
+        document.getElementById("result-title").innerText = "à²ªà²¤à³à²¤à³† à²«à²²à²¿à²¤à²¾à²‚à²¶";
+        document.getElementById("result-text").innerText = resultKannada || "à²«à²²à²¿à²¤à²¾à²‚à²¶ à²‡à²²à³à²²";
     } else {
         document.getElementById("result-title").innerText = "Detection Result";
         document.getElementById("result-text").innerText = resultEnglish || "No result available";
@@ -105,7 +105,7 @@ function switchLanguage(lang) {
 // Simulated AI Detection
 function detectDisease() {
     resultEnglish = "The plant is affected by leaf blight. Apply fungicide immediately.";
-    resultKannada = "ಸಸ್ಯಕ್ಕೆ ಲೀಫ್ ಬ್ಲೈಟ್ ರೋಗ ಬಂದಿದೆ. ತಕ್ಷಣ ಫಂಗಿಸೈಡ್ ಬಳಸಿರಿ.";
+    resultKannada = "à²¸à²¸à³à²¯à²•à³à²•à³† à²²à³€à²«à³ à²¬à³à²²à³ˆà²Ÿà³ à²°à³‹à²— à²¬à²‚à²¦à²¿à²¦à³†. à²¤à²•à³à²·à²£ à²«à²‚à²—à²¿à²¸à³ˆà²¡à³ à²¬à²³à²¸à²¿à²°à²¿.";
 
     if (currentLanguage === "kn") {
         document.getElementById("result-text").innerText = resultKannada;
@@ -142,3 +142,4 @@ function stopSpeech() {
 
 </body>
 </html>
+

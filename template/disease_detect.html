@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -214,7 +214,7 @@
 <body>
     <div class="lang-switcher">
         <button class="lang-btn" onclick="setLanguage('en')">English</button>
-        <button class="lang-btn" onclick="setLanguage('kn')">ಕನ್ನಡ</button>
+        <button class="lang-btn" onclick="setLanguage('kn')">à²•à²¨à³à²¨à²¡</button>
     </div>
 
     <!-- Automatically re-fetch results if language is changed after analysis -->
@@ -232,34 +232,34 @@
             <!-- Header -->
             <div class="form-header" style="margin-bottom: 2rem;">
                 <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem;">
-                    <span style="font-size:2rem;">🔬</span>
+                    <span style="font-size:2rem;">ðŸ”¬</span>
                     <h2 style="margin:0;" data-i18n="detect:title">AI Disease Detection</h2>
                 </div>
                 <p style="color:var(--text-muted); font-size:0.95rem;" data-i18n="detect:subtitle">
                     Upload a photo of your plant and let AI identify the disease instantly
                 </p>
                 <div id="districtContextBadge" style="display: none; margin-top: 0.75rem; background: rgba(122,193,66,0.1); border: 1px solid rgba(122,193,66,0.3); padding: 0.35rem 0.85rem; border-radius: 99px; font-size: 0.8rem; color: var(--primary); font-weight: 600; width: fit-content; align-items: center; gap: 0.4rem;">
-                    📍 Regional Context Active
+                    ðŸ“ Regional Context Active
                 </div>
             </div>
 
             <!-- Upload Zone -->
             <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-                <span class="upload-icon">📷</span>
+                <span class="upload-icon">ðŸ“·</span>
                 <div class="upload-title" data-i18n="detect:upload_title">Click or drag a photo here</div>
-                <div class="upload-sub" data-i18n="detect:upload_sub">Supports JPG, PNG, WEBP — Max 10MB</div>
+                <div class="upload-sub" data-i18n="detect:upload_sub">Supports JPG, PNG, WEBP â€” Max 10MB</div>
                 <input type="file" id="fileInput" accept="image/*">
             </div>
 
             <!-- Preview -->
             <div class="preview-wrapper" id="previewWrapper">
                 <img id="previewImg" alt="Plant preview">
-                <button class="remove-img" onclick="removeImage()" title="Remove image">✕</button>
+                <button class="remove-img" onclick="removeImage()" title="Remove image">âœ•</button>
             </div>
 
             <!-- Analyze Button -->
             <button class="analyze-btn" id="analyzeBtn" onclick="analyzeDisease()" disabled data-i18n="detect:analyze_btn">
-                🔬 Analyze Disease
+                ðŸ”¬ Analyze Disease
             </button>
 
             <!-- Scanning Loader -->
@@ -274,15 +274,15 @@
                     <div style="flex:1;">
                         <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.4rem;">
                             <span class="disease-tag" id="diseaseTag">DISEASE DETECTED</span>
-                            <span class="confidence-badge" id="confidenceBadge">⚡ 94% confident</span>
+                            <span class="confidence-badge" id="confidenceBadge">âš¡ 94% confident</span>
                         </div>
-                        <div class="disease-name" id="diseaseName">—</div>
+                        <div class="disease-name" id="diseaseName">â€”</div>
                         <div class="severity-bar-wrap">
                             <span class="severity-label" data-i18n="detect:severity">Severity:</span>
                             <div class="severity-bar">
                                 <div class="severity-fill" id="severityFill" style="width:0%; background: #ef4444;"></div>
                             </div>
-                            <span class="severity-label" id="severityText">—</span>
+                            <span class="severity-label" id="severityText">â€”</span>
                         </div>
                     </div>
                 </div>
@@ -290,52 +290,52 @@
                 <div class="info-grid">
                     <!-- Symptoms -->
                     <div class="info-card">
-                        <div class="info-card-title">⚠️ <span data-i18n="detect:symptoms">Symptoms</span></div>
-                        <div class="info-card-body" id="symptomsText">—</div>
+                        <div class="info-card-title">âš ï¸ <span data-i18n="detect:symptoms">Symptoms</span></div>
+                        <div class="info-card-body" id="symptomsText">â€”</div>
                     </div>
                     <!-- Causes -->
                     <div class="info-card">
-                        <div class="info-card-title">🔍 <span data-i18n="detect:causes">Causes</span></div>
-                        <div class="info-card-body" id="causesText">—</div>
+                        <div class="info-card-title">ðŸ” <span data-i18n="detect:causes">Causes</span></div>
+                        <div class="info-card-body" id="causesText">â€”</div>
                     </div>
                     <!-- Solution -->
                     <div class="info-card">
-                        <div class="info-card-title">✅ <span data-i18n="detect:solution">Treatment & Solution</span></div>
-                        <div class="info-card-body" id="solutionText">—</div>
+                        <div class="info-card-title">âœ… <span data-i18n="detect:solution">Treatment & Solution</span></div>
+                        <div class="info-card-body" id="solutionText">â€”</div>
                     </div>
                     <!-- Prevention -->
                     <div class="info-card">
-                        <div class="info-card-title">🛡️ <span data-i18n="detect:prevention">Prevention</span></div>
-                        <div class="info-card-body" id="preventionText">—</div>
+                        <div class="info-card-title">ðŸ›¡ï¸ <span data-i18n="detect:prevention">Prevention</span></div>
+                        <div class="info-card-body" id="preventionText">â€”</div>
                     </div>
                     <!-- Medicines -->
                     <div class="info-card full-width">
-                        <div class="info-card-title">💊 <span data-i18n="detect:medicines">Recommended Medicines / Pesticides</span></div>
+                        <div class="info-card-title">ðŸ’Š <span data-i18n="detect:medicines">Recommended Medicines / Pesticides</span></div>
                         <div class="medicine-pills" id="medicinesPills"></div>
                     </div>
                 </div>
 
                 <!-- Action buttons -->
                 <div class="nav-row">
-                    <button class="nav-btn primary" onclick="resetDetection()" data-i18n="detect:try_another">🔄 Try Another Image</button>
-                    <button class="nav-btn" onclick="speakResult()" id="btnSpeak" style="display:none; border-color:#3b82f6; color:#3b82f6;">🔊 Read Aloud</button>
-                    <button class="nav-btn" onclick="stopSpeech()" id="btnStop" style="display:none; border-color:#ef4444; color:#ef4444;">⛔ Stop</button>
-                    <a href="crops.html" class="nav-btn" id="backCrops" data-i18n="detect:back_crops">← Back to Crops</a>
+                    <button class="nav-btn primary" onclick="resetDetection()" data-i18n="detect:try_another">ðŸ”„ Try Another Image</button>
+                    <button class="nav-btn" onclick="speakResult()" id="btnSpeak" style="display:none; border-color:#3b82f6; color:#3b82f6;">ðŸ”Š Read Aloud</button>
+                    <button class="nav-btn" onclick="stopSpeech()" id="btnStop" style="display:none; border-color:#ef4444; color:#ef4444;">â›” Stop</button>
+                    <a href="crops.html" class="nav-btn" id="backCrops" data-i18n="detect:back_crops">â† Back to Crops</a>
                 </div>
             </div>
 
             <!-- Initial back button (visible before analysis) -->
             <div style="text-align:center; margin-top:1.5rem;" id="backWrap">
-                <a href="crops.html" class="nav-btn" style="display:inline-block; min-width:180px;" data-i18n="detect:back_crops">← Back to Crops</a>
+                <a href="crops.html" class="nav-btn" style="display:inline-block; min-width:180px;" data-i18n="detect:back_crops">â† Back to Crops</a>
             </div>
 
         </div>
     </div>
 
     <script src="static/translations.js"></script>
-    <script src="static/main.js"></script>
+    <script src="static/main.js?v=2"></script>
    <script>
-    const HF_ENDPOINT = 'http://localhost:3000/predict';  // ✅ Fixed — actual URL string
+    const HF_ENDPOINT = 'http://localhost:3000/predict';  // âœ… Fixed â€” actual URL string
 let selectedFile = null;
 let base64Image = null;
 let imageMime = null;
@@ -405,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
             : distKey.replace('-', ' ').toUpperCase();
         const badge = document.getElementById('districtContextBadge');
         badge.style.display = 'inline-flex';
-        badge.innerHTML = `📍 <span>Optimized for: <b>${currentDistrictName}</b></span>`;
+        badge.innerHTML = `ðŸ“ <span>Optimized for: <b>${currentDistrictName}</b></span>`;
     }
 });
 
@@ -424,7 +424,7 @@ function stopSpeech() {
     window.speechSynthesis.cancel();
 }
 
-// --- Analysis ---  ✅ Only one definition now
+// --- Analysis ---  âœ… Only one definition now
 async function analyzeDisease() {
     if (!base64Image) return;
     const lang = localStorage.getItem('preferredLang') || 'en';
@@ -436,7 +436,7 @@ async function analyzeDisease() {
     document.getElementById('backWrap').style.display = 'none';
 
     try {
-        const response = await fetch(HF_ENDPOINT, {   // ✅ clean fetch with base64
+        const response = await fetch(HF_ENDPOINT, {   // âœ… clean fetch with base64
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -515,7 +515,7 @@ function populateResults(result) {
         tag.className = 'disease-tag';
     }
     
-    document.getElementById('confidenceBadge').innerHTML = `⚡ ${result.confidence}% confident`;
+    document.getElementById('confidenceBadge').innerHTML = `âš¡ ${result.confidence}% confident`;
     document.getElementById('diseaseName').innerHTML = result.disease_name;
     
     const fill = document.getElementById('severityFill');

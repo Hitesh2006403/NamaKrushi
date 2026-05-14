@@ -385,6 +385,134 @@ function detectDisease() {
     alert('Voice-based disease detection is not implemented yet. Please use the image upload feature.');
 }
 
+// Brand logo (top-left) on all pages
+function injectBrandLogoStyles() {
+    if (document.getElementById('nk-brand-styles')) return;
+
+    const style = document.createElement('style');
+    style.id = 'nk-brand-styles';
+    style.textContent = `
+        #nk-brand-corner {
+            position: fixed;
+            top: 18px;
+            left: 20px;
+            z-index: 2600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px 8px 8px;
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.62);
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            text-decoration: none;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+        #nk-brand-corner:hover {
+            transform: translateY(-1px);
+            border-color: rgba(122, 193, 66, 0.75);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.34);
+        }
+        #nk-brand-icon-wrap {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, rgba(122, 193, 66, 0.28), rgba(43, 124, 196, 0.2));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        #nk-brand-icon {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.22));
+        }
+        #nk-brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.05;
+        }
+        #nk-brand-title {
+            color: #f8fafc;
+            font-size: 0.93rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+        #nk-brand-subtitle {
+            margin-top: 3px;
+            color: #cbd5e1;
+            opacity: 0.9;
+            font-size: 0.69rem;
+            font-weight: 500;
+            letter-spacing: 0.35px;
+            text-transform: uppercase;
+        }
+        @media (max-width: 760px) {
+            #nk-brand-corner {
+                top: 14px;
+                left: 14px;
+                gap: 7px;
+                padding: 6px 9px 6px 6px;
+                border-radius: 12px;
+            }
+            #nk-brand-icon-wrap {
+                width: 34px;
+                height: 34px;
+                border-radius: 10px;
+                padding: 4px;
+            }
+            #nk-brand-title {
+                font-size: 0.82rem;
+            }
+            #nk-brand-subtitle {
+                display: none;
+            }
+        }
+    `;
+
+    document.head.appendChild(style);
+}
+
+function injectBrandLogo() {
+    if (!document.body || document.getElementById('nk-brand-corner')) return;
+
+    const brand = document.createElement('a');
+    brand.id = 'nk-brand-corner';
+    brand.href = 'index.html';
+    brand.setAttribute('aria-label', 'Namakrushi Home');
+    brand.innerHTML = `
+        <span id="nk-brand-icon-wrap">
+            <img id="nk-brand-icon" src="static/logo.png" alt="Namakrushi Logo" />
+        </span>
+        <span id="nk-brand-text">
+            <span id="nk-brand-title">Namakrushi</span>
+            <span id="nk-brand-subtitle">Agri Intelligence</span>
+        </span>
+    `;
+
+    const logoImg = brand.querySelector('#nk-brand-icon');
+    if (logoImg) {
+        logoImg.onerror = () => {
+            const iconWrap = document.getElementById('nk-brand-icon-wrap');
+            if (iconWrap) {
+                iconWrap.textContent = 'N';
+                iconWrap.style.color = '#f8fafc';
+                iconWrap.style.fontWeight = '800';
+                iconWrap.style.fontSize = '1rem';
+            }
+        };
+    }
+
+    document.body.prepend(brand);
+}
+
 // Modal close on outside click
 window.onclick = function(event) {
     const modal = document.getElementById('resetModal');
@@ -395,6 +523,8 @@ window.onclick = function(event) {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    injectBrandLogoStyles();
+    injectBrandLogo();
     // Any initialization code here
     console.log('Namma Krishi Portal JavaScript loaded');
 });

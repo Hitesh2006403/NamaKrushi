@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -31,7 +31,7 @@
     </div>
 
     <script src="static/translations.js"></script>
-    <script src="static/main.js"></script>
+    <script src="static/main.js?v=2"></script>
     <script>
         const WEATHER_API_KEY = "{{ WEATHER_API_KEY|default:''|escapejs }}";
         const params = new URLSearchParams(window.location.search);
@@ -94,3 +94,4 @@
     </script>
 </body>
 </html>
+
