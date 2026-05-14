@@ -4,7 +4,10 @@ const translations = {
             lang_en: "English",
             lang_kn: "ಕನ್ನಡ",
             back: "Back",
-            continue: "Continue"
+            continue: "Continue",
+            home: "Home",
+            about: "About Us",
+            weather: "Weather"
         },
         index: {
             title: "Namma Krishi",
