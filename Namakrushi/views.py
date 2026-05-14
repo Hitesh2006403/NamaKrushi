@@ -25,6 +25,14 @@ def CropsPage(request):
     return render(request, 'crops.html', _secret_context())
 
 
+def AboutPage(request):
+    return render(request, 'about.html')
+
+
+def WeatherPage(request):
+    return render(request, 'weather.html', _secret_context())
+
+
 def DiseaseDetectPage(request):
     return render(request, 'disease_detect.html')
 

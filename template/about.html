@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Namakrushi</title>
+    <link rel="stylesheet" href="static/about.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="lang-switcher">
+        <button class="lang-btn" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn" onclick="setLanguage('kn')">Kannada</button>
+    </div>
+
+    <div class="container">
+        <div class="form-wrapper glass select-glass">
+            <div class="top-nav" aria-label="Primary navigation">
+                <a href="district.html" class="top-nav-link">Home</a>
+                <a href="about.html" class="top-nav-link active">About Us</a>
+                <a id="weather-link" href="weather.html" class="top-nav-link">Weather</a>
+            </div>
+
+            <div class="form-header">
+                <h2>About Us</h2>
+                <p>Namakrushi helps farmers take quick and confident crop decisions.</p>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3>Our Goal</h3>
+                    <p>
+                        We provide easy access to regional crop recommendations, soil insights,
+                        and disease support so farmers can plan better and reduce risk.
+                    </p>
+                </div>
+                <div class="about-card">
+                    <h3>What We Offer</h3>
+                    <p>
+                        District-based crop guidance, AI-assisted disease detection, and weather
+                        visibility in a simple workflow designed for day-to-day farming use.
+                    </p>
+                </div>
+                <div class="about-card">
+                    <h3>Why It Matters</h3>
+                    <p>
+                        Timely local information improves decisions on crop choice, treatment,
+                        and field operations, leading to healthier yields.
+                    </p>
+                </div>
+            </div>
+
+            <div class="page-actions">
+                <a id="back-crops-link" href="district.html" class="back-btn">&larr; Back</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/translations.js"></script>
+    <script src="static/main.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const districtKey = params.get('district');
+        const city = params.get('city');
+
+        if (districtKey) {
+            const backLink = document.getElementById('back-crops-link');
+            if (backLink) {
+                backLink.href = `crops.html?district=${encodeURIComponent(districtKey)}`;
+                backLink.textContent = '<- Back to Crops';
+            }
+        }
+
+        if (districtKey && city) {
+            const weatherLink = document.getElementById('weather-link');
+            if (weatherLink) {
+                weatherLink.href = `weather.html?district=${encodeURIComponent(districtKey)}&city=${encodeURIComponent(city)}`;
+            }
+        }
+    </script>
+</body>
+</html>

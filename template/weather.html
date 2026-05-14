@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather - Namakrushi</title>
+    <link rel="stylesheet" href="static/weather.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="lang-switcher">
+        <button class="lang-btn" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn" onclick="setLanguage('kn')">Kannada</button>
+    </div>
+
+    <div class="container">
+        <div class="form-wrapper glass select-glass">
+            <div class="top-nav" aria-label="Primary navigation">
+                <a href="district.html" class="top-nav-link">Home</a>
+                <a id="about-link" href="about.html" class="top-nav-link">About Us</a>
+                <a href="weather.html" class="top-nav-link active">Weather</a>
+            </div>
+
+            <div class="form-header">
+                <h2 id="weather-title">Weather</h2>
+                <p id="weather-subtitle">Live weather updates for your selected district.</p>
+            </div>
+
+            <div id="weather-widget" class="data-widget">
+                <div class="loading-widget">Loading weather...</div>
+            </div>
+
+            <div class="page-actions">
+                <a id="back-crops-link" href="district.html" class="back-btn">&larr; Back</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/translations.js"></script>
+    <script src="static/main.js"></script>
+    <script>
+        const WEATHER_API_KEY = "{{ WEATHER_API_KEY|default:''|escapejs }}";
+        const params = new URLSearchParams(window.location.search);
+        const districtKey = params.get('district');
+        const city = params.get('city');
+        const weatherWidget = document.getElementById('weather-widget');
+
+        function renderMessage(message) {
+            weatherWidget.innerHTML = `<div class="error-widget">${message}</div>`;
+        }
+
+        async function fetchWeather(targetCity) {
+            if (!WEATHER_API_KEY) {
+                renderMessage('Weather API key is missing in server configuration.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(targetCity)},IN&units=metric&appid=${WEATHER_API_KEY}`);
+                if (!response.ok) {
+                    throw new Error('Weather request failed');
+                }
+
+                const data = await response.json();
+                weatherWidget.innerHTML = `
+                    <div class="widget-header">
+                        <span class="widget-title">Current Weather</span>
+                        <span class="widget-location">${targetCity}</span>
+                    </div>
+                    <div class="weather-main">
+                        <div class="weather-temp">${Math.round(data.main.temp)} C</div>
+                        <img class="weather-icon" alt="weather icon" src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png">
+                    </div>
+                    <div class="weather-meta">
+                        <span class="capitalize">${data.weather[0].description}</span>
+                        <span>Humidity: ${data.main.humidity}%</span>
+                        <span>Wind: ${Math.round(data.wind.speed)} m/s</span>
+                    </div>
+                `;
+            } catch {
+                renderMessage('Weather is currently unavailable. Please try again.');
+            }
+        }
+
+        if (districtKey) {
+            const backLink = document.getElementById('back-crops-link');
+            if (backLink) {
+                backLink.href = `crops.html?district=${encodeURIComponent(districtKey)}`;
+                backLink.textContent = '<- Back to Crops';
+            }
+        }
+
+        if (districtKey && city) {
+            const aboutLink = document.getElementById('about-link');
+            if (aboutLink) {
+                aboutLink.href = `about.html?district=${encodeURIComponent(districtKey)}&city=${encodeURIComponent(city)}`;
+            }
+        }
+
+        if (city) {
+            document.getElementById('weather-title').textContent = `Weather - ${city}`;
+            fetchWeather(city);
+        } else {
+            document.getElementById('weather-subtitle').textContent = 'Select a district on the crops page, then open Weather.';
+            renderMessage('No district selected. Open Weather from the crops page.');
+        }
+    </script>
+</body>
+</html>
