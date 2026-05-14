@@ -399,9 +399,9 @@ function injectBrandLogoStyles() {
             z-index: 2600;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 12px 8px 8px;
-            border-radius: 16px;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 18px;
             background: rgba(15, 23, 42, 0.62);
             border: 1px solid rgba(255, 255, 255, 0.24);
             backdrop-filter: blur(10px);
@@ -416,10 +416,10 @@ function injectBrandLogoStyles() {
             box-shadow: 0 10px 28px rgba(0, 0, 0, 0.34);
         }
         #nk-brand-icon-wrap {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            padding: 5px;
+            width: 68px;
+            height: 68px;
+            border-radius: 14px;
+            padding: 7px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -434,45 +434,18 @@ function injectBrandLogoStyles() {
             display: block;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.22));
         }
-        #nk-brand-text {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.05;
-        }
-        #nk-brand-title {
-            color: #f8fafc;
-            font-size: 0.93rem;
-            font-weight: 700;
-            letter-spacing: 0.2px;
-        }
-        #nk-brand-subtitle {
-            margin-top: 3px;
-            color: #cbd5e1;
-            opacity: 0.9;
-            font-size: 0.69rem;
-            font-weight: 500;
-            letter-spacing: 0.35px;
-            text-transform: uppercase;
-        }
         @media (max-width: 760px) {
             #nk-brand-corner {
                 top: 14px;
                 left: 14px;
-                gap: 7px;
-                padding: 6px 9px 6px 6px;
+                padding: 6px;
                 border-radius: 12px;
             }
             #nk-brand-icon-wrap {
-                width: 34px;
-                height: 34px;
+                width: 56px;
+                height: 56px;
                 border-radius: 10px;
-                padding: 4px;
-            }
-            #nk-brand-title {
-                font-size: 0.82rem;
-            }
-            #nk-brand-subtitle {
-                display: none;
+                padding: 6px;
             }
         }
     `;
@@ -490,10 +463,6 @@ function injectBrandLogo() {
     brand.innerHTML = `
         <span id="nk-brand-icon-wrap">
             <img id="nk-brand-icon" src="static/logo.png" alt="Namakrushi Logo" />
-        </span>
-        <span id="nk-brand-text">
-            <span id="nk-brand-title">Namakrushi</span>
-            <span id="nk-brand-subtitle">Agri Intelligence</span>
         </span>
     `;
 
@@ -523,6 +492,11 @@ window.onclick = function(event) {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    const hasKannadaSwitch = document.querySelector("[onclick*=\"setLanguage('kn')\"], [onclick*=\"switchLanguage('kn')\"]");
+    if (!hasKannadaSwitch && typeof setLanguage === 'function') {
+        setLanguage('en');
+    }
+
     injectBrandLogoStyles();
     injectBrandLogo();
     // Any initialization code here
