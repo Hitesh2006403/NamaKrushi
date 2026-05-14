@@ -15,12 +15,6 @@
 
     <div class="container">
         <div class="form-wrapper glass select-glass">
-            <div class="top-nav" aria-label="Primary navigation">
-                <a href="district.html" class="top-nav-link">Home</a>
-                <a href="about.html" class="top-nav-link active">About Us</a>
-                <a id="weather-link" href="weather.html" class="top-nav-link">Weather</a>
-            </div>
-
             <div class="form-header">
                 <h2>About Us</h2>
                 <p>Namakrushi helps farmers take quick and confident crop decisions.</p>
@@ -71,12 +65,6 @@
             }
         }
 
-        if (districtKey && city) {
-            const weatherLink = document.getElementById('weather-link');
-            if (weatherLink) {
-                weatherLink.href = `weather.html?district=${encodeURIComponent(districtKey)}&city=${encodeURIComponent(city)}`;
-            }
-        }
     </script>
 </body>
 </html>

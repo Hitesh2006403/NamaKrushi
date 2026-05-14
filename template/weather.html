@@ -15,12 +15,6 @@
 
     <div class="container">
         <div class="form-wrapper glass select-glass">
-            <div class="top-nav" aria-label="Primary navigation">
-                <a href="district.html" class="top-nav-link">Home</a>
-                <a id="about-link" href="about.html" class="top-nav-link">About Us</a>
-                <a href="weather.html" class="top-nav-link active">Weather</a>
-            </div>
-
             <div class="form-header">
                 <h2 id="weather-title">Weather</h2>
                 <p id="weather-subtitle">Live weather updates for your selected district.</p>
@@ -87,13 +81,6 @@
             if (backLink) {
                 backLink.href = `crops.html?district=${encodeURIComponent(districtKey)}`;
                 backLink.textContent = '<- Back to Crops';
-            }
-        }
-
-        if (districtKey && city) {
-            const aboutLink = document.getElementById('about-link');
-            if (aboutLink) {
-                aboutLink.href = `about.html?district=${encodeURIComponent(districtKey)}&city=${encodeURIComponent(city)}`;
             }
         }
 
