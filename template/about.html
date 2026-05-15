@@ -10,18 +10,19 @@
 <body>
     <div class="lang-switcher">
         <button class="lang-btn" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn" onclick="setLanguage('kn')">ಕನ್ನಡ</button>
     </div>
 
     <div class="container">
         <div class="form-wrapper glass select-glass">
             <div class="form-header">
-                <h2>About Us</h2>
-                <p>Smart, accessible technology for farmers and agriculture enthusiasts.</p>
+                <h2 data-i18n="about_page:title">About Us</h2>
+                <p data-i18n="about_page:subtitle">Smart, accessible technology for farmers and agriculture enthusiasts.</p>
             </div>
 
             <div class="about-content">
                 <div class="about-text-card">
-                    <p class="about-description">
+                    <p class="about-description" data-i18n="about_page:description">
                         Welcome to Namakrushi, an innovative platform designed to support farmers and agriculture enthusiasts with smart and accessible technology. Our website helps users identify plant diseases by simply uploading an image of the affected plant, providing quick insights that can help in early detection and better crop management. In addition, Namakrushi offers valuable agricultural information covering all 31 districts of Karnataka, enabling users to explore district-wise farming details, crop-related knowledge, and regional agricultural insights. Our mission is to bridge the gap between agriculture and technology by making farming information more accurate, accessible, and useful for everyone, helping create a smarter and more sustainable agricultural future.
                     </p>
                 </div>
@@ -33,7 +34,7 @@
         </div>
     </div>
 
-    <script src="static/translations.js"></script>
+    <script src="static/translations.js?v=2"></script>
     <script src="static/main.js?v=4"></script>
     <script>
         const params = new URLSearchParams(window.location.search);

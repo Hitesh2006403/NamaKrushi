@@ -34,6 +34,11 @@ const translations = {
             login: "Log In",
             no_account: "Don't have an account? Register"
         },
+        about_page: {
+            title: "About Us",
+            subtitle: "Smart, accessible technology for farmers and agriculture enthusiasts.",
+            description: "Welcome to Namakrushi, an innovative platform designed to support farmers and agriculture enthusiasts with smart and accessible technology. Our website helps users identify plant diseases by simply uploading an image of the affected plant, providing quick insights that can help in early detection and better crop management. In addition, Namakrushi offers valuable agricultural information covering all 31 districts of Karnataka, enabling users to explore district-wise farming details, crop-related knowledge, and regional agricultural insights. Our mission is to bridge the gap between agriculture and technology by making farming information more accurate, accessible, and useful for everyone, helping create a smarter and more sustainable agricultural future."
+        },
         district: {
             title: "Welcome",
             subtitle: "Please select your district to proceed",
@@ -208,6 +213,11 @@ const translations = {
             forgot: "ಪಾಸ್‌ವರ್ಡ್ ಮರೆತಿದ್ದೀರಾ?",
             login: "ಲಾಗಿನ್",
             no_account: "ಖಾತೆ ಹೊಂದಿಲ್ಲವೇ? ನೋಂದಾಯಿಸಿ"
+        },
+        about_page: {
+            title: "ನಮ್ಮ ಬಗ್ಗೆ",
+            subtitle: "ರೈತರು ಮತ್ತು ಕೃಷಿ ಆಸಕ್ತರಿಗಾಗಿ ಸ್ಮಾರ್ಟ್ ಮತ್ತು ಸುಲಭ ತಂತ್ರಜ್ಞಾನ.",
+            description: "ನಮಸ್ಕಾರ, Namakrushi ಗೆ ಸ್ವಾಗತ. ಇದು ರೈತರು ಮತ್ತು ಕೃಷಿ ಆಸಕ್ತರಿಗೆ ಸ್ಮಾರ್ಟ್ ಹಾಗೂ ಸುಲಭ ತಂತ್ರಜ್ಞಾನವನ್ನು ಒದಗಿಸಲು ವಿನ್ಯಾಸಗೊಳಿಸಲಾದ ನವೀನ ವೇದಿಕೆ. ನಮ್ಮ ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ ಬಳಕೆದಾರರು ಬಾಧಿತ ಸಸೆಯ ಚಿತ್ರವನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡುವ ಮೂಲಕ ಸಸ್ಯರೋಗಗಳನ್ನು ಗುರುತಿಸಬಹುದು. ಇದರಿಂದ ರೋಗವನ್ನು ಆರಂಭದಲ್ಲೇ ಪತ್ತೆಹಚ್ಚಿ ಬೆಳೆ ನಿರ್ವಹಣೆಯನ್ನು ಇನ್ನಷ್ಟು ಉತ್ತಮಗೊಳಿಸಲು ತ್ವರಿತ ಮಾಹಿತಿಯನ್ನು ಪಡೆಯಬಹುದು. ಇದರ ಜೊತೆಗೆ, Namakrushi ಕರ್ನಾಟಕದ ಎಲ್ಲಾ 31 ಜಿಲ್ಲೆಗಳ ಕುರಿತ ಮೌಲ್ಯಯುತ ಕೃಷಿ ಮಾಹಿತಿಯನ್ನು ಒದಗಿಸುತ್ತದೆ. ಇದರ ಮೂಲಕ ಬಳಕೆದಾರರು ಜಿಲ್ಲಾವಾರು ಕೃಷಿ ವಿವರಗಳು, ಬೆಳೆ ಸಂಬಂಧಿತ ಜ್ಞಾನ ಮತ್ತು ಪ್ರಾದೇಶಿಕ ಕೃಷಿ ಒಳನೋಟಗಳನ್ನು ತಿಳಿದುಕೊಳ್ಳಬಹುದು. ಕೃಷಿ ಮತ್ತು ತಂತ್ರಜ್ಞಾನಗಳ ನಡುವಿನ ಅಂತರವನ್ನು ಕಡಿಮೆ ಮಾಡುವುದು ನಮ್ಮ ಧ್ಯೇಯ. ಎಲ್ಲರಿಗೂ ಹೆಚ್ಚು ನಿಖರ, ಸುಲಭ ಮತ್ತು ಉಪಯುಕ್ತ ಕೃಷಿ ಮಾಹಿತಿಯನ್ನು ಒದಗಿಸುವ ಮೂಲಕ ಹೆಚ್ಚು ಸ್ಮಾರ್ಟ್ ಮತ್ತು ಸುಸ್ಥಿರ ಕೃಷಿ ಭವಿಷ್ಯ ನಿರ್ಮಿಸಲು ನಾವು ಬದ್ಧರಾಗಿದ್ದೇವೆ."
         },
         district: {
             title: "ಸ್ವಾಗತ",
