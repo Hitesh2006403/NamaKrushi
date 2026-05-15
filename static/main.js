@@ -385,6 +385,91 @@ function detectDisease() {
     alert('Voice-based disease detection is not implemented yet. Please use the image upload feature.');
 }
 
+function injectGlobalFooterStyles() {
+    if (document.getElementById('nk-global-footer-style')) return;
+
+    const style = document.createElement('style');
+    style.id = 'nk-global-footer-style';
+    style.textContent = `
+        #nk-global-footer {
+            width: 100%;
+            margin-top: 2rem;
+            padding: 0.95rem 1.1rem;
+            border-top: 1px solid rgba(122, 193, 66, 0.38);
+            background: rgba(11, 31, 23, 0.86);
+            backdrop-filter: blur(6px);
+        }
+
+        #nk-global-footer .nk-footer-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.7rem 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        #nk-global-footer .nk-footer-copy {
+            margin: 0;
+            color: rgba(248, 250, 252, 0.92);
+            font-size: 0.87rem;
+            line-height: 1.45;
+        }
+
+        #nk-global-footer .nk-footer-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.95rem;
+            flex-wrap: wrap;
+        }
+
+        #nk-global-footer .nk-footer-nav a {
+            color: #c8f7dd;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        #nk-global-footer .nk-footer-nav a:hover,
+        #nk-global-footer .nk-footer-nav a:focus-visible {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        @media (max-width: 640px) {
+            #nk-global-footer .nk-footer-inner {
+                justify-content: center;
+                text-align: center;
+            }
+        }
+    `;
+
+    document.head.appendChild(style);
+}
+
+function injectGlobalFooter() {
+    if (!document.body || document.getElementById('nk-global-footer')) return;
+
+    injectGlobalFooterStyles();
+
+    const year = new Date().getFullYear();
+    const footer = document.createElement('footer');
+    footer.id = 'nk-global-footer';
+    footer.innerHTML = `
+        <div class="nk-footer-inner">
+            <p class="nk-footer-copy">&copy; ${year} Namma Krishi. Smart agriculture support for Karnataka.</p>
+            <nav class="nk-footer-nav" aria-label="Footer navigation">
+                <a href="index.html" data-i18n="common:home">Home</a>
+                <a href="about.html" data-i18n="common:about">About Us</a>
+                <a href="weather.html" data-i18n="common:weather">Weather</a>
+            </nav>
+        </div>
+    `;
+
+    document.body.appendChild(footer);
+}
+
 // Remove any previously injected logo artifacts
 function removeBrandLogoArtifacts() {
     const logo = document.getElementById('nk-brand-corner');
@@ -410,6 +495,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     removeBrandLogoArtifacts();
+    injectGlobalFooter();
+    if (typeof applyTranslations === 'function') {
+        applyTranslations();
+    }
     // Any initialization code here
     console.log('Namma Krishi Portal JavaScript loaded');
 });
